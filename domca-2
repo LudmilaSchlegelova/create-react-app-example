@@ -1,0 +1,6 @@
+vytvor si komponentu Badge ktora bude mat vstupne parametre children, variant, pill
+
+tato komponenta je span vsetky varianty farieb budu podla bootstrapu
+ak zaslem atribut pill={true} pill komponenta bude mat css viacej border-radius
+
+ak budes chciet skus to pomocou styled comoponents

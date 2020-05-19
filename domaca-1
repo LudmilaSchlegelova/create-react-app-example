@@ -1,0 +1,3 @@
+vytvor komponentu Alert ktora bude vyzerat rovnako ako v bootstrapu https://react-bootstrap.github.io/components/alerts/
+tato komponenta bude ocakavat atribut variant ktori budes zasielat z hora tam kde tu komponentu vlozit a pouzijes t.j. v App komponente
+pouzi Alert so vsetkymi variantami ako su v bootstrape nezabudni ich nastilovat pomocou className
