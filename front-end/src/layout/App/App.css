@@ -1,7 +1,0 @@
-.wrapper {
-	margin: 20px;
-}
-
-.wrapper > .alert:first-child {
-	margin-top: 0;
-}
