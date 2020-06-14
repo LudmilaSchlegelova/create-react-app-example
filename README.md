@@ -1385,3 +1385,627 @@ const App = () => {
 
 export default App
 ```
+
+## Dynamické nastavovanie štýlov
+
+zmenme farbu pozadia pre tlacidlo na zelenu a farba pisma na bielu. Skúsme po kliknuti na tlacidlo nech sa farba pozadia meni zo zelenej na cervenu a naopak...
+
+```jsx
+import React, { Component } from 'react'
+import Person from '../../components/Person'
+
+class App extends Component {
+	state = {
+		persons: [
+			{ id: 'asdfa1', name: 'Janko', age: 28 },
+			{ id: 'asdfa2', name: 'Duri', age: 27 },
+			{ id: 'asdfa3', name: 'Vierka', age: 20 },
+		],
+		showPersons: false,
+	}
+
+	deletePersonHanlder = personIndex => {
+		const persons = [...this.state.persons]
+
+		persons.splice(personIndex, 1)
+		this.setState({ persons: persons })
+	}
+
+	nameChnagedHandler = (event, personId) => {
+		const personIndex = this.state.persons.findIndex(personItem => {
+			return personItem.id === personId
+		})
+
+		const person = {
+			...this.state.persons[personIndex],
+		}
+		person.name = event.target.value
+
+		const persons = [...this.state.persons]
+		persons[personIndex] = person
+
+		this.setState({ persons: persons })
+	}
+
+	togglePersonsHandler = () => {
+		this.setState({ showPersons: !this.state.showPersons })
+	}
+
+	render() {
+		const style = {
+			backgroundColor: 'green',
+			color: 'white',
+			font: 'inherit',
+			border: '1px solid blue',
+			padding: '8px',
+			cursor: 'pointer',
+		}
+
+		let persons = null
+		if (this.state.showPersons) {
+			persons = (
+				<div>
+					{this.state.persons.map((person, index) => (
+						<Person
+							changed={event => this.nameChnagedHandler(event, person.id)}
+							click={() => this.deletePersonHanlder(index)}
+							key={person.id}
+							name={person.name}
+							age={person.age}
+						/>
+					))}
+				</div>
+			)
+			// prepis inline style z green na red
+			style.backgroundColor = 'red'
+		}
+
+		return (
+			<div className="App">
+				<button style={style} onClick={this.togglePersonsHandler}>
+					Switch name
+				</button>
+				{persons}
+			</div>
+		)
+	}
+}
+
+export default App
+```
+
+Vytvorme si dve classy `.red` ktora bude obsahovat `color: red` a `.bold` bude pridavat `font-weight: bold` style.
+Nad button Switch name si pridam p element s textom `Example text` a sk[sim pridat dve classy pre tento element
+
+skusme pridat logiku ak je dlzka persons pola mensia rovna ako 2 tak pridam classu `.red` a dalsia logika ak je dlzka pola persons mensia a rovna 1 pridam classu `.bold`
+
+```jsx
+import React, { Component } from 'react'
+import Person from '../../components/Person'
+import './style.css'
+
+class App extends Component {
+	state = {
+		persons: [
+			{ id: 'asdfa1', name: 'Janko', age: 28 },
+			{ id: 'asdfa2', name: 'Duri', age: 27 },
+			{ id: 'asdfa3', name: 'Vierka', age: 20 },
+		],
+		showPersons: false,
+	}
+
+	deletePersonHanlder = personIndex => {
+		const persons = [...this.state.persons]
+
+		persons.splice(personIndex, 1)
+		this.setState({ persons: persons })
+	}
+
+	nameChnagedHandler = (event, personId) => {
+		const personIndex = this.state.persons.findIndex(personItem => {
+			return personItem.id === personId
+		})
+
+		const person = {
+			...this.state.persons[personIndex],
+		}
+		person.name = event.target.value
+
+		const persons = [...this.state.persons]
+		persons[personIndex] = person
+
+		this.setState({ persons: persons })
+	}
+
+	togglePersonsHandler = () => {
+		this.setState({ showPersons: !this.state.showPersons })
+	}
+
+	render() {
+		const style = {
+			backgroundColor: 'green',
+			color: 'white',
+			font: 'inherit',
+			border: '1px solid blue',
+			padding: '8px',
+			cursor: 'pointer',
+		}
+
+		let persons = null
+		if (this.state.showPersons) {
+			persons = (
+				<div>
+					{this.state.persons.map((person, index) => (
+						<Person
+							changed={event => this.nameChnagedHandler(event, person.id)}
+							click={() => this.deletePersonHanlder(index)}
+							key={person.id}
+							name={person.name}
+							age={person.age}
+						/>
+					))}
+				</div>
+			)
+
+			style.backgroundColor = 'red'
+		}
+
+		// zmena stylov pomocou class zo suboru style.css
+		const classes = []
+		if (this.state.persons.length <= 2) {
+			classes.push('red')
+		}
+		if (this.state.persons.length <= 1) {
+			classes.push('bold')
+		}
+
+		return (
+			<div className="App">
+				<p className={classes.join(' ')}>Example text</p>
+				<button style={style} onClick={this.togglePersonsHandler}>
+					Switch name
+				</button>
+				{persons}
+			</div>
+		)
+	}
+}
+
+export default App
+```
+
+## Radium a pouzitie pseudo selektorov
+
+vramci css vieme pridat psuedo selector napr. hover velmi jednoducho ale co ak sme chceli tuto moznost vykonat v inline styloch vramci reactu to nie je mozne ale je to mozne s pouzitim balicka [radium](https://www.npmjs.com/package/radium). Balíček je doplnok ktori už niekto vytvoril a ktori nám pridáva nejakú novú schopnosť. V našom prípad vieme pridavať pseudoselektori v inline style objekte. Inštalacia balíčka sa vykoná pomocou prikazu
+
+```
+npm install --save radium
+```
+
+alebo
+
+```
+yarn add radium
+```
+
+použitie tohto balíčka začína importom Radium
+
+```jsx
+import React, { Component } from 'react'
+import Person from '../../components/Person'
+// import balicka Radium a nasledne celkom na spodnej casti suboru prevolam metodu Radium do ktoreho vkladam class komponentu.
+import Radium from 'radium'
+import './style.css'
+
+class App extends Component {
+	state = {
+		persons: [
+			{ id: 'asdfa1', name: 'Janko', age: 28 },
+			{ id: 'asdfa2', name: 'Duri', age: 27 },
+			{ id: 'asdfa3', name: 'Vierka', age: 20 },
+		],
+		showPersons: false,
+	}
+
+	deletePersonHanlder = personIndex => {
+		const persons = [...this.state.persons]
+
+		persons.splice(personIndex, 1)
+		this.setState({ persons: persons })
+	}
+
+	nameChnagedHandler = (event, personId) => {
+		const personIndex = this.state.persons.findIndex(personItem => {
+			return personItem.id === personId
+		})
+
+		const person = {
+			...this.state.persons[personIndex],
+		}
+		person.name = event.target.value
+
+		const persons = [...this.state.persons]
+		persons[personIndex] = person
+
+		this.setState({ persons: persons })
+	}
+
+	togglePersonsHandler = () => {
+		this.setState({ showPersons: !this.state.showPersons })
+	}
+
+	render() {
+		const style = {
+			backgroundColor: 'green',
+			color: 'white',
+			font: 'inherit',
+			border: '1px solid blue',
+			padding: '8px',
+			cursor: 'pointer',
+			// teraz uz vieme vramci inline stylov pouzivat hover effecty
+			':hover': {
+				backgroundColor: 'lightgreen',
+				color: 'black',
+			},
+		}
+
+		let persons = null
+		if (this.state.showPersons) {
+			persons = (
+				<div>
+					{this.state.persons.map((person, index) => (
+						<Person
+							changed={event => this.nameChnagedHandler(event, person.id)}
+							click={() => this.deletePersonHanlder(index)}
+							key={person.id}
+							name={person.name}
+							age={person.age}
+						/>
+					))}
+				</div>
+			)
+
+			style.backgroundColor = 'red'
+			// ak chceme prepisat stylz pre pseudo selektor vieme to takto jednoducho
+			style[':hover'] = {
+				backgroundColor: 'salmon',
+			}
+		}
+
+		const classes = []
+
+		if (this.state.persons.length <= 2) {
+			classes.push('red')
+		}
+		if (this.state.persons.length <= 1) {
+			classes.push('bold')
+		}
+
+		return (
+			<div className="App">
+				<p className={classes.join(' ')}>Example text</p>
+				<button style={style} onClick={this.togglePersonsHandler}>
+					Switch name
+				</button>
+				{persons}
+			</div>
+		)
+	}
+}
+
+// tym ze prevolam jednu funkcionalnu komponentu druhou a doplnim ju o schopnosti, Raddium sa stava higher order component (HOC). Nesk;r si HOC skusime vztovri aj my... Da sa to pouzit aj na class aj na func. komponenty rovnakym spôsobom.
+export default Radium(App)
+```
+
+## Radium a použitie media query pre responzivitu
+
+ak by sme cheli napisat v cssku media querz pre Person a zmenit sirku urobime to takto
+
+```css
+@media (min-width: 500px) {
+	.wrapper {
+		width: 450px;
+	}
+}
+```
+
+ak by sme to chceli urobit v inline zapise v Person funkcionalnej komponente urobime to takto
+
+```jsx
+import React from 'react'
+import Radium from 'radium'
+import './style.css'
+
+const Person = ({ name, age, children, click, changed }) => {
+	const style = {
+		'@media(min-width: 500px)': {
+			width: '450px',
+		},
+	}
+
+	return (
+		<div className="wrapper" style={style}>
+			<p onClick={click}>remove person</p>
+			<p>
+				I'am a {name} and I am {age} years old!
+			</p>
+			{children && <p>{children}</p>}
+			<input type="text" onChange={changed} value={name} />
+		</div>
+	)
+}
+
+export default Radium(Person)
+```
+
+ak by sme sa pozreli do prehliadaca a klikli na nas button uvideli sme error ktori nam hovori ze ak pouzivam media query alebo keyfrmes musim obalit danu funkcionalnu komponentu HOC komponentou `StyleRoot` takto
+
+```jsx
+import React, { Component } from 'react'
+import Person from '../../components/Person'
+import Radium, { StyleRoot } from 'radium'
+import './style.css'
+
+class App extends Component {
+	state = {
+		persons: [
+			{ id: 'asdfa1', name: 'Janko', age: 28 },
+			{ id: 'asdfa2', name: 'Duri', age: 27 },
+			{ id: 'asdfa3', name: 'Vierka', age: 20 },
+		],
+		showPersons: false,
+	}
+
+	deletePersonHanlder = personIndex => {
+		const persons = [...this.state.persons]
+
+		persons.splice(personIndex, 1)
+		this.setState({ persons: persons })
+	}
+
+	nameChnagedHandler = (event, personId) => {
+		const personIndex = this.state.persons.findIndex(personItem => {
+			return personItem.id === personId
+		})
+
+		const person = {
+			...this.state.persons[personIndex],
+		}
+		person.name = event.target.value
+
+		const persons = [...this.state.persons]
+		persons[personIndex] = person
+
+		this.setState({ persons: persons })
+	}
+
+	togglePersonsHandler = () => {
+		this.setState({ showPersons: !this.state.showPersons })
+	}
+
+	render() {
+		const style = {
+			backgroundColor: 'green',
+			color: 'white',
+			font: 'inherit',
+			border: '1px solid blue',
+			padding: '8px',
+			cursor: 'pointer',
+			// teraz uz vieme vramci inline stylov pouzivat hover effecty
+			':hover': {
+				backgroundColor: 'lightgreen',
+				color: 'black',
+			},
+		}
+
+		let persons = null
+		if (this.state.showPersons) {
+			persons = (
+				<div>
+					{this.state.persons.map((person, index) => (
+						<Person
+							changed={event => this.nameChnagedHandler(event, person.id)}
+							click={() => this.deletePersonHanlder(index)}
+							key={person.id}
+							name={person.name}
+							age={person.age}
+						/>
+					))}
+				</div>
+			)
+
+			style.backgroundColor = 'red'
+			// ak chceme prepisat stylz pre pseudo selektor vieme to takto jednoducho
+			style[':hover'] = {
+				backgroundColor: 'salmon',
+			}
+		}
+
+		const classes = []
+
+		if (this.state.persons.length <= 2) {
+			classes.push('red')
+		}
+		if (this.state.persons.length <= 1) {
+			classes.push('bold')
+		}
+
+		return (
+			<StyleRoot>
+				<div className="App">
+					<p className={classes.join(' ')}>Example text</p>
+					<button style={style} onClick={this.togglePersonsHandler}>
+						Switch name
+					</button>
+					{persons}
+				</div>
+			</StyleRoot>
+		)
+	}
+}
+
+export default Radium(App)
+```
+
+## intro styled components
+
+styled-components je baliček ktori nám prídá kopec schopností pre naše react aplikácie.
+
+- automatic critical css je schopnost kde styled component sleduje ktora komponenta sa vykresluje na stranke a automaticky vklada jej styly v najmensom potrebnom mnozstve alebo formate.
+- ziadne className a menej chyb, znamena to ze kazdý pridaný štýl sa pridáva pomocou vygenerovanej unikatnej classy. Nikdy sa nestane to ze budem mat duplicitu a prepisanie si stylov medzi komponentami.
+- lahsie mazanie a detekcia csska ktora je pouzita pre ktoru komponentu
+- lahsia tvorba dynamickeho csska t.j. globalne styly sa daju jednoducho definovat z jedneho suboru a pouzivat nad vsetkymi styled komponentami
+- lahsia udrzba kodu kedze stylujeme len v js suboroch
+- automaticky prefix pre vsetky prehliadace.
+
+ak chcem naisntalovat [styled-components](https://styled-components.com/)
+
+```
+npm install --save styled-components
+```
+
+alebo
+
+```
+yarn add --save styled-components
+```
+
+Pouzitie vramci funkcionalen komponentz v Person.js<br>
+
+```jsx
+import React from 'react'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+	width: 200px;
+	margin: 16px;
+	border: 1px solid black;
+	box-shadow: 0 2px 3px #ccc;
+	padding: 15px;
+	text-align: center;
+
+	@media (min-width: 500px) {
+		.wrapper {
+			width: 450px;
+		}
+	}
+`
+
+const Person = ({ name, age, children, click, changed }) => {
+	return (
+		<Wrapper>
+			<p onClick={click}>remove person</p>
+			<p>
+				I'am a {name} and I am {age} years old!
+			</p>
+			{children && <p>{children}</p>}
+			<input type="text" onChange={changed} value={name} />
+		</Wrapper>
+	)
+}
+
+export default Person
+```
+
+prepis class komponenty so styled components v tejto komponente mame aj dynamicke css ktore sa meni na zaklade nejakej podmienky to vieme v styled komponent vytvorit takto
+
+```jsx
+import React, { Component } from 'react'
+import Person from '../../components/Person'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+	text-align: center;
+`
+
+const Text = styled.p`
+	color: ${({ persons }) => persons.length <= 2 && 'red'};
+	font-weight: ${({ persons }) => persons.length <= 1 && 'bold'};
+`
+
+const Button = styled.button`
+	background-color: ${({ showPersons }) => (showPersons ? 'red' : 'green')};
+	color: white;
+	font: inherit;
+	border: 1px solid blue;
+	padding: 8px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: ${({ showPersons }) =>
+			showPersons ? 'salmon' : 'lightgreen'};
+		color: black;
+	}
+`
+
+class App extends Component {
+	state = {
+		persons: [
+			{ id: 'asdfa1', name: 'Janko', age: 28 },
+			{ id: 'asdfa2', name: 'Duri', age: 27 },
+			{ id: 'asdfa3', name: 'Vierka', age: 20 },
+		],
+		showPersons: false,
+	}
+
+	deletePersonHanlder = personIndex => {
+		const persons = [...this.state.persons]
+
+		persons.splice(personIndex, 1)
+		this.setState({ persons: persons })
+	}
+
+	nameChnagedHandler = (event, personId) => {
+		const personIndex = this.state.persons.findIndex(personItem => {
+			return personItem.id === personId
+		})
+
+		const person = {
+			...this.state.persons[personIndex],
+		}
+		person.name = event.target.value
+
+		const persons = [...this.state.persons]
+		persons[personIndex] = person
+
+		this.setState({ persons: persons })
+	}
+
+	togglePersonsHandler = () => {
+		this.setState({ showPersons: !this.state.showPersons })
+	}
+
+	render() {
+		let persons = null
+		if (this.state.showPersons) {
+			persons = (
+				<div>
+					{this.state.persons.map((person, index) => (
+						<Person
+							changed={event => this.nameChnagedHandler(event, person.id)}
+							click={() => this.deletePersonHanlder(index)}
+							key={person.id}
+							name={person.name}
+							age={person.age}
+						/>
+					))}
+				</div>
+			)
+		}
+
+		return (
+			<Wrapper>
+				<Text persons={this.state.persons}>Example text</Text>
+				<Button
+					onClick={this.togglePersonsHandler}
+					showPersons={this.state.showPersons}>
+					Switch name
+				</Button>
+				{persons}
+			</Wrapper>
+		)
+	}
+}
+
+export default App
+```
