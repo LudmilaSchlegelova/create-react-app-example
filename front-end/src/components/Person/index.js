@@ -17,6 +17,13 @@ const Wrapper = styled.div`
 `
 
 const Person = ({ name, age, children, click, changed }) => {
+	const rnd = Math.random()
+	console.log('[Person.js] rendering')
+
+	// if (rnd > 0.7) {
+	// 	throw new Error('Something went wrong')
+	// }
+
 	return (
 		<Wrapper>
 			<p onClick={click}>remove person</p>

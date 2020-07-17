@@ -4,17 +4,17 @@
 
 - je to javascriptová knižnica, ktorá umožnuje jednoducho vyskladať webove rozhranie pomocou component, ktoré vkladá do DOMu a pred vložením naskôr vysklada virtuálny DOM
 - vramci používania react knižnice môžme používať jsx zápis
-- jsx je zapis javascriptu spolus HTMLkom
+- jsx je zapis javascriptu spolu s HTMLkom
 
 ## aplikacie
 
 - single page aplication
-  jedno HTMLko v ktorom sa pomocou napr. react. prekresluje component a nerefreshuje sa stranka a tiez sa znova nestahujú všetky zdrojové kody (cssko, js, html, bootstrap,...) pop prvom nacitani stranky.<br>
+  jedno HTMLko v ktorom sa pomocou napr. react. prekresluje component a nerefreshuje sa stranka a tiez sa znova nestahujú všetky zdrojové kody (cssko, js, html, bootstrap,...) po prvom nacitani stranky.<br>
   je webová aplikácia alebo webová stránka, ktorá spolupracuje s webovým prehliadačom dynamickým prepisovaním aktuálnej webovej stránky novými údajmi z webového servera namiesto predvolenej metódy načítania celých nových stránok prehliadačom. Cieľom sú rýchlejšie prechody, vďaka ktorým bude web vyzerať skôr ako natívna aplikácia.
 - multiple page aplication
   viacero HTML stranok, ktoré sa vykresľujú na servery.
 
-pre rýchly šrart do reactu si naskôr vytovríme základ react aplikácie pomocou [create react app](https://reactjs.org/docs/create-a-new-react-app.html)
+pre rýchly štart do reactu si naskôr vytvoríme základ react aplikácie pomocou [create react app](https://reactjs.org/docs/create-a-new-react-app.html)
 
 použitie: otvorim si vo vscode priečinok už s vyklonovaným repositárom z githubu alebo gitlabu. Následne si spustime terminál vo vscode a spustim príkaz
 
@@ -132,10 +132,10 @@ ReactDOM.render(
 serviceWorker.unregister()
 ```
 
-vramci App.js suboru mozme mat definovanu bud class componets alebo functional componets kazdy jsx vyraz ktori vracia komponenta sa po builde zmeni na javascript vid tekto priklad
+vramci App.js suboru mozme mat definovanu bud class componets alebo functional componets kazdy jsx vyraz ktory vracia komponenta sa po builde zmeni na javascript vid tekto priklad
 
 ```js
-// tymto spôsobom vložim funkcionalitu React a doplnok { Component } ktorí doplňa extendnutú class App komponentu o ďalšie schopnosti
+// tymto spôsobom vložim funkcionalitu React a doplnok { Component } ktory doplňa extendnutú class App komponentu o ďalšie schopnosti
 import React, { Component } from 'react'
 
 // nasledne po class sa definuje názov class komponenty ktorú pomocou extends doplňam o schopnosti z reactu
@@ -157,7 +157,7 @@ export default App
 JSX zapis po zbildeni aplikácie vyzerá takto
 
 ```js
-// tymto spôsobom vložim funkcionalitu React a doplnok { Component } ktorí doplňa extendnutú class App komponentu o ďalšie schopnosti
+// tymto spôsobom vložim funkcionalitu React a doplnok { Component } ktory doplňa extendnutú class App komponentu o ďalšie schopnosti
 import React, { Component } from 'react'
 // tymto spôsobom viem priradiť css štýli
 import './styles.css'
@@ -177,7 +177,7 @@ class App extends Component {
 
 Komponenty sú úžasné, pretože môžeme sústrediť náš kód na každý súbor, a tak ho spravovať oveľa lepšie, jednoduchšie a vieme takto zglobalizovať duplicitný kód.
 
-Ak vytvoríme komponentu ktorú chcem použíť na viacerých miestach rovnakú napr. vytvorim si Person komponentu s textom ktorí použijem tri krat pod sebou a vytvorím tak tri rovnaké texty jednoduchým kopírovanim komponenty.
+Ak vytvoríme komponentu ktorú chcem použíť na viacerých miestach rovnakú napr. vytvorim si Person komponentu s textom ktory použijem tri krat pod sebou a vytvorím tak tri rovnaké texty jednoduchým kopírovanim komponenty.
 
 Priklad
 Vytovrim si komponentu `<Person />` ktora bude vraciat p a text I'am a Person and I am x years old! a použijeme ich x krat pod sebou
@@ -191,7 +191,7 @@ export default Person
 pouzitie vytvorenej komponenty
 
 ```js
-// tymto spôsobom vložim funkcionalitu React a doplnok { Component } ktorí doplňa extendnutú class App komponentu o ďalšie schopnosti
+// tymto spôsobom vložim funkcionalitu React a doplnok { Component } ktory doplňa extendnutú class App komponentu o ďalšie schopnosti
 import React, { Component } from 'react'
 // tymto spôsobom viem priradiť css štýli
 import './styles.css'
@@ -288,7 +288,7 @@ class App extends Component {
 export default App
 ```
 
-medzi použitu kompoentu vieme preposlať viac ako len text, vieme preposlať aj HTML alebo ďalšiu komponentu.
+medzi použitu komponentu vieme preposlať viac ako len text, vieme preposlať aj HTML alebo ďalšiu komponentu.
 
 ```js
 import React from 'react'
@@ -416,10 +416,10 @@ export default App
 
 Ak chceme vytvorit globalnu funkciu `switchNameHandler` ktora bude očakávať vstupnú hodnotu ktoru vlozi a prepíse na novu hodnotu v objekte Persons konrektne prvý prvok z pola v premenej name<br>
 
-preposielanie hodnoty do globalnej funkcie `switchNameHandler` sa v starsom zapise pise pomocou metody `bind()`, ktora ocakava dve vstupne hodnoty. Prava hodnota je this ktora definuje spojenie medzi metodou `switchNameHandler` a hodnotou ktoru definujeme ako druhý parameter konretne v príklade `Lietadlo`<br>
+preposielanie hodnoty do globalnej funkcie `switchNameHandler` sa v starsom zapise pise pomocou metody `bind()`, ktora ocakava dve vstupne hodnoty. Prva hodnota je this ktora definuje spojenie medzi metodou `switchNameHandler` a hodnotou ktoru definujeme ako druhý parameter konretne v príklade `Lietadlo`<br>
 
 V nasom priklade sa metoda `switchNameHandler` zavola len po kliknuti na button
-a to pomocou `onClick` atributu ktori obsahuje `{this.switchNameHandler.bind(this, 'Lietadlo')}`
+a to pomocou `onClick` atributu ktory obsahuje `{this.switchNameHandler.bind(this, 'Lietadlo')}`
 
 ```js
 import React, { Component } from 'react'
@@ -635,7 +635,7 @@ onScroll
 
 ## Pridanie obojsmernej väzby
 
-priklad vytvorim si input v Person komponente s type atributom `text` pridame atirbut `onChange` kotri reprezentuje poslucháča ktorí sa spustí vždy, keď sa zmení value v tomto inpute. Pre `onChange` atribut definujem hodnotu z vonku t.j. hodnota bude definovana tam kde je dana komponenta použitá (v App.js subore) cez premennú `changed`
+priklad vytvorim si input v Person komponente s type atributom `text` pridame atirbut `onChange` ktory reprezentuje poslucháča ktory sa spustí vždy, keď sa zmení value v tomto inpute. Pre `onChange` atribut definujem hodnotu z vonku t.j. hodnota bude definovana tam kde je dana komponenta použitá (v App.js subore) cez premennú `changed`
 
 ```js
 import React from 'react'
@@ -865,12 +865,12 @@ vyhoda cssko bude aplikovane len na elmente kde sme ho definovali
 
 - lepsie riesenie je naucit sa pouzivat [styled-componentes](https://styled-components.com/)
 
-## podmienkz vykreslenia dvoch komponent na základe klikania
+## podmienky vykreslenia dvoch komponent na základe klikania
 
 [react dokumentacia s prikladami](https://reactjs.org/docs/conditional-rendering.html)
 
-nainicializujeme pre state objekt novu hodnotu `showPersons` a nastvim ju na false to bude hodnota pomocou ktorej budeme ifovat obsah.
-obalime si vsetky Person komponenty do jedneho div elementu a prepseme funkciu v buttone z `switchNameHandler` na `togglePersonsHandler` a definujem si tuto funkciu v classe ktora bude menit pomocou setState stav pre showPersons takto `this.setState({ showPersons: !this.state.showPersons })` nasledne si vytvorim podmienku pre nase div ktore obaluje Person. Vramci JSX sa pisu podmienkz vo vnutri pomocou ternanerho zapisu takto `podmienka ? priestor pre podmienku ktora je pravidva : priestor pre podmienku ktora je nepravdiva` v nasom pripade to bude `this.state.showPersons` nemusim hodnotu porovnavat s true ako `this.state.showPersons === true` pretoze nas parameter showPersons je boolean hodnota...
+nainicializujeme pre state objekt novu hodnotu `showPersons` a nastavim ju na false to bude hodnota pomocou ktorej budeme ifovat obsah.
+obalime si vsetky Person komponenty do jedneho div elementu a prepiseme funkciu v buttone z `switchNameHandler` na `togglePersonsHandler` a definujem si tuto funkciu v classe ktora bude menit pomocou setState stav pre showPersons takto `this.setState({ showPersons: !this.state.showPersons })` nasledne si vytvorim podmienku pre nase div ktore obaluje Person. Vramci JSX sa pisu podmienky vo vnutri pomocou ternanerho zapisu takto `podmienka ? priestor pre podmienku ktora je pravidva : priestor pre podmienku ktora je nepravdiva` v nasom pripade to bude `this.state.showPersons` nemusim hodnotu porovnavat s true ako `this.state.showPersons === true` pretoze nas parameter showPersons je boolean hodnota...
 
 ```js
 import React, { Component } from 'react'
@@ -2009,3 +2009,1086 @@ class App extends Component {
 
 export default App
 ```
+
+prepis na funkcionalnu
+
+```jsx
+import React, { useState } from 'react'
+import Person from '../../components/Person'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+	text-align: center;
+`
+
+const Text = styled.p`
+	color: ${({ humans }) => humans.length <= 2 && 'red'};
+	font-weight: ${({ humans }) => humans.length <= 1 && 'bold'};
+`
+
+const Button = styled.button`
+	background-color: ${({ showHumans }) => (showHumans ? 'red' : 'green')};
+	color: white;
+	font: inherit;
+	border: 1px solid blue;
+	padding: 8px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: ${({ showHumans }) =>
+			showHumans ? 'salmon' : 'lightgreen'};
+		color: black;
+	}
+`
+
+const App = () => {
+	const [humans, setHumans] = useState([
+		{ id: 'asdfa1', name: 'Janko', age: 28 },
+		{ id: 'asdfa2', name: 'Duri', age: 27 },
+		{ id: 'asdfa3', name: 'Vierka', age: 20 },
+	])
+
+	const [showHumans, setShowHumans] = useState(false)
+
+	const deleteHumanHendler = indexOfHuman => {
+		// nove pole, do ktoreho vlozim povodne pole humans
+		const newHumans = [...humans]
+		// toto nove pole vdaka splice zmazem
+		newHumans.splice(indexOfHuman, 1)
+		setHumans(newHumans)
+	}
+
+	const changeHumanName = (event, humanId) => {
+		// v poli humans hladam konkretny index
+		const indexOfHuman = humans.findIndex(item => {
+			return item.id === humanId
+		})
+		// nove pole do ktoreho vlozim povodne pole humans aj s indexom
+		const human = { ...humans[indexOfHuman] }
+		// meno sa mi bude menit podla toho co budem pisat do inputu
+		human.name = event.target.value
+
+		const newHumans = [...humans]
+		newHumans[indexOfHuman] = human
+
+		setHumans(newHumans)
+	}
+
+	const toggleHumansHandler = () => {
+		setShowHumans(!showHumans)
+	}
+
+	let humansNewElement = null
+	if (showHumans) {
+		humansNewElement = (
+			<div>
+				{humans.map((human, index) => (
+					<Person
+						changed={event => changeHumanName(event, human.id)}
+						click={() => deleteHumanHendler(index)}
+						key={human.id}
+						name={human.name}
+						age={human.age}
+					/>
+				))}
+			</div>
+		)
+	}
+
+	return (
+		<Wrapper>
+			<Text humans={humans}>Example text</Text>
+			<Button onClick={toggleHumansHandler} showHumans={showHumans}>
+				Switch name
+			</Button>
+			{humansNewElement}
+		</Wrapper>
+	)
+}
+
+export default App
+```
+
+## Debugging react app error messages vramci neobsahujucich hodnot v premennej
+
+[react dev tools doplnok](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)<br>
+
+Skúsme definovať nepsravny pristup k premennej z event objektu a premenovat `event.target.value` na `event.input.value` nasledne otvorime v prehliadac a uvidime chybovu hlasku s chybou, v ktorom subore je dana chyba a na ktorom riadku v danom subore samozrejme tato chyba sa zobrazi po zmene stavu v inputoch pre dany Person komponent. Okrem zobrazenej chyby v prehliadaci mozeme pozriet v dev tools v terminaly dalsi vystup chybovej hlasky.
+
+```jsx
+import React, { useState } from 'react'
+import Person from '../../components/Person'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+	text-align: center;
+`
+
+const Text = styled.p`
+	color: ${({ humans }) => humans.length <= 2 && 'red'};
+	font-weight: ${({ humans }) => humans.length <= 1 && 'bold'};
+`
+
+const Button = styled.button`
+	background-color: ${({ showHumans }) => (showHumans ? 'red' : 'green')};
+	color: white;
+	font: inherit;
+	border: 1px solid blue;
+	padding: 8px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: ${({ showHumans }) =>
+			showHumans ? 'salmon' : 'lightgreen'};
+		color: black;
+	}
+`
+
+const App = () => {
+	const [humans, setHumans] = useState([
+		{ id: 'asdfa1', name: 'Janko', age: 28 },
+		{ id: 'asdfa2', name: 'Duri', age: 27 },
+		{ id: 'asdfa3', name: 'Vierka', age: 20 },
+	])
+
+	const [showHumans, setShowHumans] = useState(false)
+
+	const deleteHumanHendler = indexOfHuman => {
+		const newHumans = [...humans]
+		newHumans.splice(indexOfHuman, 1)
+		setHumans(newHumans)
+	}
+
+	const changeHumanName = (event, humanId) => {
+		const indexOfHuman = humans.findIndex(item => {
+			return item.id === humanId
+		})
+		const human = { ...humans[indexOfHuman] }
+		// human.name = event.target.value  <-- spravne to je takto
+		// priklad ako vramci event premennej definujem input ktori sa v objekte nenachadza
+		human.name = event.input.value
+
+		const newHumans = [...humans]
+		newHumans[indexOfHuman] = human
+
+		setHumans(newHumans)
+	}
+
+	const toggleHumansHandler = () => {
+		setShowHumans(!showHumans)
+	}
+
+	let humansNewElement = null
+	if (showHumans) {
+		humansNewElement = (
+			<div>
+				{humans.map((human, index) => (
+					<Person
+						changed={event => changeHumanName(event, human.id)}
+						click={() => deleteHumanHendler(index)}
+						key={human.id}
+						name={human.name}
+						age={human.age}
+					/>
+				))}
+			</div>
+		)
+	}
+
+	return (
+		<Wrapper>
+			<Text humans={humans}>Example text</Text>
+			<Button onClick={toggleHumansHandler} showHumans={showHumans}>
+				Switch name
+			</Button>
+			{humansNewElement}
+		</Wrapper>
+	)
+}
+
+export default App
+```
+
+## Debugging react app hladanie logickych chyb pomocou nastroja dev tools a sourcemaps
+
+ak napisem logicku chybu napr. `humanItem.id` na `humanItem.userId` ktore sa v objekte nenachadza v prehlidaci tuto chybu neodhalime teda musime zapnut devtools a pozriet sa do sources<br>
+vramci priecinkovej strukturi src/App.js naznacime bod prerusenia vramci const indexOfHuman a zacneme znova pisat do inputu a tym ze sme defionvali prerusenie vykreslenie po zmene dat sa zastavi na tom mieste kde sme zaznacili cerveny kruzok t.j. debug mode, ak chceme ist do vnutra funkcie pouzijeme tretiu sipku v poradi smerom nadol. Ak by som prechadzal kod zhora nadol a mysou presuval nad premenne zistim kde je hodnota undefined a najdem chybu. Cize aktualna chyba bude ze v `humanItem` objekte sa nenachadza premenna `userId`
+
+```jsx
+import React, { useState } from 'react'
+import Person from '../../components/Person'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+	text-align: center;
+`
+
+const Text = styled.p`
+	color: ${({ humans }) => humans.length <= 2 && 'red'};
+	font-weight: ${({ humans }) => humans.length <= 1 && 'bold'};
+`
+
+const Button = styled.button`
+	background-color: ${({ showHumans }) => (showHumans ? 'red' : 'green')};
+	color: white;
+	font: inherit;
+	border: 1px solid blue;
+	padding: 8px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: ${({ showHumans }) =>
+			showHumans ? 'salmon' : 'lightgreen'};
+		color: black;
+	}
+`
+
+const App = () => {
+	const [humans, setHumans] = useState([
+		{ id: 'asdfa1', name: 'Janko', age: 28 },
+		{ id: 'asdfa2', name: 'Duri', age: 27 },
+		{ id: 'asdfa3', name: 'Vierka', age: 20 },
+	])
+
+	const [showHumans, setShowHumans] = useState(false)
+
+	const deleteHumanHendler = indexOfHuman => {
+		const newHumans = [...humans]
+		newHumans.splice(indexOfHuman, 1)
+		setHumans(newHumans)
+	}
+
+	const changeHumanName = (event, humanId) => {
+		const indexOfHuman = humans.findIndex(humanItem => {
+			// return humanItem.id === humanId   <-- spravne to je takto
+			// ak prepisem humanItem.id na humanItem.userId vytvorim logicku chzbu ktoru len tak neuvidim v prehliadaci a ani react app mi nepomoze
+			return humanItem.usedId === humanId
+		})
+		const human = { ...humans[indexOfHuman] }
+		human.name = event.target.value
+
+		const newHumans = [...humans]
+		newHumans[indexOfHuman] = human
+
+		setHumans(newHumans)
+	}
+
+	const toggleHumansHandler = () => {
+		setShowHumans(!showHumans)
+	}
+
+	let humansNewElement = null
+	if (showHumans) {
+		humansNewElement = (
+			<div>
+				{humans.map((human, index) => (
+					<Person
+						changed={event => changeHumanName(event, human.id)}
+						click={() => deleteHumanHendler(index)}
+						key={human.id}
+						name={human.name}
+						age={human.age}
+					/>
+				))}
+			</div>
+		)
+	}
+
+	return (
+		<Wrapper>
+			<Text humans={humans}>Example text</Text>
+			<Button onClick={toggleHumansHandler} showHumans={showHumans}>
+				Switch name
+			</Button>
+			{humansNewElement}
+		</Wrapper>
+	)
+}
+
+export default App
+```
+
+## Debugging react app pouzivanie chybovych hranic
+
+vramci Person si vytvorim nahodne generovanie chyby, ktora sa bezne deje pri requeste na databazu, moze a nemusi fungovat.
+
+```jsx
+import React from 'react'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+	width: 200px;
+	margin: 16px;
+	border: 1px solid black;
+	box-shadow: 0 2px 3px #ccc;
+	padding: 15px;
+	text-align: center;
+
+	@media (min-width: 500px) {
+		.wrapper {
+			width: 450px;
+		}
+	}
+`
+
+const Person = ({ name, age, children, click, changed }) => {
+	const rnd = Math.random()
+
+	if (rnd > 0.7) {
+		throw new Error('Something went wrong')
+	}
+
+	return (
+		<Wrapper>
+			<p onClick={click}>remove person</p>
+			<p>
+				I'am a {name} and I am {age} years old!
+			</p>
+			{children && <p>{children}</p>}
+			<input type="text" onChange={changed} value={name} />
+		</Wrapper>
+	)
+}
+
+export default Person
+```
+
+potom si vytovrim HOC ErrorBoundary pomocou ktorej budem zachytavat chyby v komponentach. Pouziva sa to iba v pripade, ze mam nejaky kod o ktorom viem ze moze zlyhat a tiez na zaznam chyb v aplikacii, pocas pouzivania.<br>
+
+podobny priklad v reacte [link](https://reactjs.org/docs/error-boundaries.html)
+
+```jsx
+import React, { Component } from 'react'
+
+class ErrorBoundary extends Component {
+	state = {
+		hasError: false,
+		errorMessage: null,
+		errorInfo: null,
+	}
+
+	componentDidCatch = (error, errorInfo) => {
+		// na tomto mieste by sa mala pouzit nejaka sluzba ktora zaznamenava chyby
+		this.setState({ hasError: true, errorMessage: error, errorInfo: errorInfo })
+	}
+
+	render() {
+		if (this.state.hasError) {
+			return <h1>{this.state.errorMessage.toString()}</h1>
+		}
+		return this.props.children
+	}
+}
+
+export default ErrorBoundary
+```
+
+pouzitie
+
+```jsx
+import React, { useState } from 'react'
+import Person from '../../components/Person'
+import ErrorBoundary from '../../components/ErrorBoundary'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+	text-align: center;
+`
+
+const Text = styled.p`
+	color: ${({ humans }) => humans.length <= 2 && 'red'};
+	font-weight: ${({ humans }) => humans.length <= 1 && 'bold'};
+`
+
+const Button = styled.button`
+	background-color: ${({ showHumans }) => (showHumans ? 'red' : 'green')};
+	color: white;
+	font: inherit;
+	border: 1px solid blue;
+	padding: 8px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: ${({ showHumans }) =>
+			showHumans ? 'salmon' : 'lightgreen'};
+		color: black;
+	}
+`
+
+const App = () => {
+	const [humans, setHumans] = useState([
+		{ id: 'asdfa1', name: 'Janko', age: 28 },
+		{ id: 'asdfa2', name: 'Duri', age: 27 },
+		{ id: 'asdfa3', name: 'Vierka', age: 20 },
+	])
+
+	const [showHumans, setShowHumans] = useState(false)
+
+	const deleteHumanHendler = indexOfHuman => {
+		// nove pole, do ktoreho vlozim povodne pole humans
+		const newHumans = [...humans]
+		// toto nove pole vdaka splice zmazem
+		newHumans.splice(indexOfHuman, 1)
+		setHumans(newHumans)
+	}
+
+	const changeHumanName = (event, humanId) => {
+		// v poli humans hladam konkretny index
+		const indexOfHuman = humans.findIndex(item => {
+			return item.id === humanId
+		})
+		// nove pole do ktoreho vlozim povodne pole humans aj s indexom
+		const human = { ...humans[indexOfHuman] }
+		// meno sa mi bude menit podla toho co budem pisat do inputu
+		human.name = event.target.value
+
+		const newHumans = [...humans]
+		newHumans[indexOfHuman] = human
+
+		setHumans(newHumans)
+	}
+
+	const toggleHumansHandler = () => {
+		setShowHumans(!showHumans)
+	}
+
+	let humansNewElement = null
+	if (showHumans) {
+		humansNewElement = (
+			<div>
+				{humans.map((human, index) => (
+					<ErrorBoundary key={human.id}>
+						<Person
+							changed={event => changeHumanName(event, human.id)}
+							click={() => deleteHumanHendler(index)}
+							name={human.name}
+							age={human.age}
+						/>
+					</ErrorBoundary>
+				))}
+			</div>
+		)
+	}
+
+	return (
+		<Wrapper>
+			<Text humans={humans}>Example text</Text>
+			<Button onClick={toggleHumansHandler} showHumans={showHumans}>
+				Switch name
+			</Button>
+			{humansNewElement}
+		</Wrapper>
+	)
+}
+
+export default App
+```
+
+## lepšia priečinkova štruktura projektu
+
+nezabudať že ak mam veľa komponent v jednom subore je lepšie vytvoriť si priečinkovú štruktúru components a do tohto priečinka vytvarať svoje globalne komponenty ktoré bude používať nad celou aplikáciou
+
+## state full and state less komponenty
+
+state full komponent je komponent, ktory ma definovany nejaky zaciatocny stav a tento stav sa meni na zaklade nejakej logiky. State full komponenty ci uz class alebo funkcionalna komponenta maju rozne zapisy.
+
+- class state full komponenta
+
+```jsx
+import React, { Component } from 'react'
+
+export default class Example extends Component {
+	state = {
+		showTitle: false,
+	}
+
+	toggleTitleHandler = () => {
+		this.setState({ showTitle: !this.state.showTitle })
+	}
+
+	render() {
+		return (
+			<div>
+				<button onClick={this.toggleTitleHandler}>show title</button>
+				{this.state.showTitle && this.props.title}
+			</div>
+		)
+	}
+}
+```
+
+- funkcionalna state full komponenta
+
+```jsx
+import React, { useState } from 'react'
+
+const Example = props => {
+	const [showTitle, setShowTitle] = useState(false)
+
+	const toggleTitleHandler = () => {
+		setShowTitle(!showTitle)
+	}
+
+	return (
+		<div>
+			<button onClick={toggleTitleHandler}>show title</button>
+			{showTitle && props.title}
+		</div>
+	)
+}
+
+export default Example
+```
+
+- state less komponenty su bezstavove komponenty, ktore nemaju dynamicky meniaci obsah, len vykresluju obsah.
+
+## class vs. funkcionalna komponenta
+
+- class komponenta je objekt, ktory je doplneny o funkcionalitu z reactu.
+
+```jsx
+class NazovKomponenty extends Component {...}
+```
+
+- funkcionalna komponenta je jednoducha js funkcia, ktora vracia jsx kod.
+
+```jsx
+const NazovKomponenty = (props) => {...}
+```
+
+- class a funkcionalna komponenta sa lisi vramci manazovania stavu v komponente a vramci react metod, pre class existuju life cycle (zivotne cykly) a pre funkcionalne komponenty mame react hooks.
+- kazda class komponenta ma vo vnutri dosah na vsetko pomocou slova `this`. Napriklad na stav v komponente je dosah `this.state.nazovStavu` alebo preposlana hodnota do class komponenty `this.props.preposlanaHodnota`.
+
+## react life cycles
+
+react umoznuje definovat komponenty ako triedy alebo funkcie. Komponenty definovane ako triedy v sucasnosti poskytuju viac funkcii, ktore nazyvame `life cycle`. Ak chceme definovat class komponent od reactu, musime rozsirit tuto classu o React.Component
+
+```jsx
+import React from 'react'
+
+class Example extends React.Component {
+	render() {
+		return <h1>Hello,{this.props.name}</h1>
+	}
+}
+```
+
+Jedina metoda, ktoru musime v class komponente vzdy definovat je `render()`, vsetky ostatne life cycle metody su volitelne.<br>
+
+Kazda react class komponenta ma niekolko life cycle metod, ktore mozeme prepisat, tak aby sa spustili na kod v konkretnych casoch procesu, t.j. od inicializacie stavu v komponente pri zachytavani zmeny stavu, zmenit stav pred vykreslenim v UI do prehliadaca,...
+
+### v ramci class komponents mame tieto life cycle metody
+
+tieto metody sa volaju vramci class komponenty v nasledujucom poradi, ked sa vytvara instancia komponenty a vklada sa do DOM, ako celok ich mozeme oznacit za `mounting` metody:
+
+- constructor(props)
+- static getDerivedStateFromProps(props,state)
+- render()
+- componentDidMount()
+
+aktualizacia moze byt sposobena zmenami props alebo stavu. Pri opakovanom vykreslovani komponenty sa tieto metody zapisuju v nasledujucom poradi, tiez ich mozeme oznacit za `updating` metody:
+
+- static getDerivedStateFromProps(props,state)
+- shouldComponentUpdate()
+- render()
+- getSnapshotBeforeUpdate(prevProps,prevState)
+- componentDidUpdate(prevProps,prevState,snapshot)
+
+ked sa komponent odstranuje z DOM vramci class komponenty pouzivame na to metodu `componentWillUnmount()`. Radi sa medzi `unmounting` metodu. Vramci react buducnosti bude tato metoda odstranena, nedoporucuje sa pouzivat pri tvorbe komponent.
+
+- componentWillUnmount()
+
+tieto metody sa volaju ked dojde k chybe pocas vykreslovania alebo v metode life cycle alebo v konstruktore. Zachytavaju sa chyby od miesta kde sme tieto life cycle pouzili az po vsetky komponenty, ktore su obalene touto komponentou. Radime ich medzi `error handling` metody:
+
+- static getDerivedStateFromError()
+- componentDidCatch()
+
+### ---------------------------------------------------------------------------------------------
+
+### constructor(props)
+
+ked je component vytvoreny ako prve je volana metoda konstruktor. Je to defaultna metoda vramci ES6 class schopnosti. Podstatna vec je, ze tento konstruktor dokaze prijimat props z vonku ale vo vnutri konstruktora sa musi volat metoda `super(props)`. Samotny konstruktor nemusi byt definovany v kazdej class komponente. Okrem nacitania props sa v konstuktore definuju vsetky zaciatocne stavy komponenty. Vo vnutri konstruktora by sa nemali zapisovat metody HTTP requestov alebo zoradovanie niecoho vramci local storagu v prehliadaci, alebo zasielanie nejakych dat tretej strane.<br>
+
+Vramci class App componenty sme definovali atribut title s hodnoutou takto:
+
+```jsx
+<App title="example title" />
+```
+
+danu premennu `title` vieme ziskat a definovat v konstruktore ako state takto:
+
+```jsx
+import React, { Component } from 'react'
+
+export default class Example extends Component {
+	constructor(props) {
+		super(props)
+		this.state = {
+			title: this.props.title,
+			showTitle: false,
+		}
+	}
+
+	toggleTitleHandler = () => {
+		this.setState({ showTitle: !this.state.showTitle })
+	}
+
+	render() {
+		return (
+			<div>
+				<button onClick={this.toggleTitleHandler}>show title</button>
+				{this.state.showTitle && this.state.title}
+			</div>
+		)
+	}
+}
+```
+
+priklad nacitania premennej bez konstruktora, ktory sa uz nepouziva
+
+```jsx
+import React, { Component } from 'react'
+
+export default class Example extends Component {
+	state = {
+		showTitle: false,
+	}
+
+	toggleTitleHandler = () => {
+		this.setState({ showTitle: !this.state.showTitle })
+	}
+
+	render() {
+		return (
+			<div>
+				<button onClick={this.toggleTitleHandler}>show title</button>
+				{this.state.showTitle && this.props.title}
+			</div>
+		)
+	}
+}
+```
+
+### static getDerivedStateFromProps(props,state)
+
+je to metoda, ktora sa vola tesne pred volanim metody `render()`, t.j. pri uvodnom nacitani komponenty a tiez aj pri zmene stavu, teda aktualizaciach. Tato metoda by mala vracat objekt na aktualizaciu stavu, alebo null. Tato metoda sa zriedkavo pouziva, ked stav zavisi od zmien v props v priebehu casu. <br>
+Napriklad by mohlo byt uzitocne implementovat komponent `<Transition>`, ktory porovnava jeho predchadzajuce a nasledujuce children a rozhoduje, ktore z nich sa budu animovat.
+
+```jsx
+ReactDOM.render(<Example favcol="yellow" />, document.getElementById('root'))
+```
+
+```jsx
+import React, { Component } from 'react'
+
+export default class Example extends Component {
+	state = {
+		favoriteColor: 'red',
+	}
+
+	static getDerivedStateFromProps(props, state) {
+		return {
+			favoriteColor: props.favcol,
+		}
+	}
+	render() {
+		return <h1>My favorite color is {this.state.favoriteColor}</h1>
+	}
+}
+```
+
+### render()
+
+Jedina metoda, ktoru musime definovat v class komponente je `render()`
+
+### componentDidMount()
+
+Metoda sa vola po vlozeni a vykresleni metody do DOM. V nej by sme mohli definovat nejakeho posluchaca na nejaky event, nejaky asynchronny kod, request na databazu.
+
+```jsx
+ReactDOM.render(<Example />, document.getElementById('root'))
+```
+
+```jsx
+import React, { Component } from 'react'
+
+export default class Example extends Component {
+	state = {
+		favoriteColor: 'red',
+	}
+
+	componentDidMount() {
+		setTimeout(() => {
+			this.setState({ favoriteColor: 'yellow' })
+		}, 3 * 1000)
+	}
+	render() {
+		return <h1>My favorite color is {this.state.favoriteColor}</h1>
+	}
+}
+```
+
+### life cycles mounting metody
+
+najskôr zašlime title atribut do App komponenty takto
+
+```jsx
+<App title="Example title" />
+```
+
+definujem si console.log pre constructor, getDerivedStateFromProps, componentDidMount, vramci render metody App komponenty a vo vnútri Person komponenty a pokusme sa vytvorit novu komponentu Persons. Tato komponenta bude vykreslovat zoznam humans tiez definujme console log v tejto komponente pre kazdy napamovany prvok z pola. Pozrime sa kedy su dane console.logi volane v prehliadaci v dev tools terminaly. Vidime najskôr log constructor potom getDerivedStateFromProps nasledne render nasledne componentDidMount. Nevidime log ktori je definovany v Persons komponente, pretoze to nie je e3te vzkreslene v DOM. Po kliknuti na tlacidlo uvidime aj dany Persons a person rendering kedze dane komponenty boli volane a aby sa vykreslili...
+
+```jsx
+class App extends Component {
+	constructor(props) {
+		super(props)
+		console.log('[App.js] constructor', props)
+
+		this.state = {
+			humans: [
+				{ id: 'asdfa1', name: 'Janko', age: 28 },
+				{ id: 'asdfa2', name: 'Duri', age: 27 },
+				{ id: 'asdfa3', name: 'Vierka', age: 20 },
+			],
+			showHumans: false,
+		}
+	}
+
+	static getDerivedStateFromProps(props, state) {
+		console.log('[App.js] getDrivedFromProps', props, state)
+		return state
+	}
+
+	componentDidMount() {
+		console.log('[App.js] componentDidMount')
+	}
+
+	deleteHumanHendler = indexOfHuman => {
+		// nove pole, do ktoreho vlozim povodne pole humans
+		const newHumans = [...this.state.humans]
+		// toto nove pole vdaka splice zmazem
+		newHumans.splice(indexOfHuman, 1)
+		this.setState({ humans: newHumans })
+	}
+
+	changeHumanName = (event, humanId) => {
+		// v poli humans hladam konkretny index
+		const indexOfHuman = this.state.humans.findIndex(item => {
+			return item.id === humanId
+		})
+		// nove pole do ktoreho vlozim povodne pole humans aj s indexom
+		const human = { ...this.state.humans[indexOfHuman] }
+		// meno sa mi bude menit podla toho co budem pisat do inputu
+		human.name = event.target.value
+
+		const newHumans = [...this.state.humans]
+		newHumans[indexOfHuman] = human
+
+		this.setState({ humans: newHumans })
+	}
+
+	toggleHumansHandler = () => {
+		this.setState({ showHumans: !this.state.showHumans })
+	}
+
+	render() {
+		console.log('[App.js] render', this.props, this.state)
+
+		let humansNewElement = null
+		if (this.state.showHumans) {
+			humansNewElement = (
+				<div>
+					{this.state.humans.map((human, index) => {
+						console.log('[Persons.js] rendering')
+
+						return (
+							<Person
+								key={human.id}
+								changed={event => this.changeHumanName(event, human.id)}
+								click={() => this.deleteHumanHendler(index)}
+								name={human.name}
+								age={human.age}
+							/>
+						)
+					})}
+				</div>
+			)
+		}
+
+		return (
+			<Wrapper>
+				<Text humans={this.state.humans}>Example text</Text>
+				<Button onClick={this.toggleHumansHandler} showHumans={this.showHumans}>
+					Switch name
+				</Button>
+				{humansNewElement}
+			</Wrapper>
+		)
+	}
+}
+
+export default App
+```
+
+```jsx
+import React, { Component } from 'react'
+import Person from '../Person'
+
+export default class Persons extends Component {
+	render() {
+		return (
+			<div>
+				{this.props.humans.map((human, index) => {
+					console.log('[Persons.js] rendering')
+
+					return (
+						<Person
+							key={human.id}
+							changed={event => this.props.changed(event, human.id)}
+							click={() => this.props.click(index)}
+							name={human.name}
+							age={human.age}
+						/>
+					)
+				})}
+			</div>
+		)
+	}
+}
+```
+
+a tiez si defijme console log v Person komponente takto
+
+```jsx
+import React from 'react'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+	width: 200px;
+	margin: 16px;
+	border: 1px solid black;
+	box-shadow: 0 2px 3px #ccc;
+	padding: 15px;
+	text-align: center;
+
+	@media (min-width: 500px) {
+		.wrapper {
+			width: 450px;
+		}
+	}
+`
+
+const Person = ({ name, age, children, click, changed }) => {
+	const rnd = Math.random()
+	console.log('[Person.js] rendering')
+
+	return (
+		<Wrapper>
+			<p onClick={click}>remove person</p>
+			<p>
+				I'am a {name} and I am {age} years old!
+			</p>
+			{children && <p>{children}</p>}
+			<input type="text" onChange={changed} value={name} />
+		</Wrapper>
+	)
+}
+
+export default Person
+```
+
+### ---------------------------------------------------------------------------------------------
+
+### shouldComponentUpdate()
+
+metoda je volana pred vykreslenim do DOM. Nemala by sa pouzivat ak pouzivame metodu `forceUpdate()`
+je metoda ktora ma vraciat boolean hodnotu a ta urcuje kedy ma alebo nema komponenta pokracovat vo vykreslvoani do DOM. Málo používaná metoda a nepoužívať v nej porovnania hodnot vramci JSON.strigify
+
+```jsx
+export default class Header extends Component {
+	constructor(props) {
+		super(props)
+		this.state = { favoriteColor: 'red' }
+	}
+
+	shouldComponentUpdate() {
+		console.log('[Header.js] shouldComponentUpdate')
+		return false
+	}
+
+	changeColor = () => {
+		this.setState({ favoriteColor: 'blue' })
+	}
+
+	render() {
+		return (
+			<div>
+				<h1
+					style={{
+						color: this.state.favoriteColor,
+					}}>
+					My favorite color is {this.state.favoriteColor}
+				</h1>
+				<button type="button" onClick={this.changeColor}>
+					Change color
+				</button>
+			</div>
+		)
+	}
+}
+
+ReactDOM.render(<Header />, document.getElementById('root'))
+```
+
+priklad s kladnym return ktori povoli prekreslenie
+
+```jsx
+export default class Header extends Component {
+	constructor(props) {
+		super(props)
+		this.state = { favoriteColor: 'red' }
+	}
+
+	shouldComponentUpdate() {
+		console.log('[Header.js] shouldComponentUpdate')
+		return true
+	}
+
+	changeColor = () => {
+		this.setState({ favoriteColor: 'blue' })
+	}
+
+	render() {
+		return (
+			<div>
+				<h1
+					style={{
+						color: this.state.favoriteColor,
+					}}>
+					My favorite color is {this.state.favoriteColor}
+				</h1>
+				<button type="button" onClick={this.changeColor}>
+					Change color
+				</button>
+			</div>
+		)
+	}
+}
+
+ReactDOM.render(<Header />, document.getElementById('root'))
+```
+
+### getSnapshotBeforeUpdate(prevProps, prevState)
+
+tato metoda sa vyvola tesne predtym, ako sa posledny vykresleny vstup vlozi do DOM. Umoznuje vramci komponenty zachytit props a state pred aktualizaciou, co znamena ze aj po aktualizacii je moze skontrolovat ake hodnoti boli pred aktualizaciou. Inac povedan prepisem po prvy krat stav red na novy stav yellow a vramci metody `getSnapshotBeforeUpdate(prevProps, prevState)` mam stale ulozeny predosli stav red ako v tomto priklade.
+
+```jsx
+import React, { Component } from 'react'
+
+export default class Header extends Component {
+	constructor(props) {
+		super(props)
+		this.state = { favoriteColor: 'red' }
+	}
+	componentDidMount() {
+		setTimeout(() => {
+			this.setState({ favoriteColor: 'yellow' })
+		}, 1000)
+	}
+
+	getSnapshotBeforeUpdate(prevProps, prevState) {
+		document.getElementById(
+			'div1'
+		).innerHTML = `Before the update, the favorite was ${prevState.favoriteColor}`
+		return null
+	}
+
+	componentDidUpdate() {
+		document.getElementById(
+			'div2'
+		).innerHTML = `The updated favorite is ${this.state.favoriteColor}`
+	}
+
+	changeColor = () => {
+		this.setState({ favoriteColor: 'blue' })
+	}
+
+	render() {
+		return (
+			<div>
+				<h1
+					style={{
+						color: this.state.favoriteColor,
+					}}>
+					My favorite color is {this.state.favoriteColor}
+				</h1>
+				<button type="button" onClick={this.changeColor}>
+					Change color
+				</button>
+				<div id="div1"></div>
+				<div id="div2"></div>
+			</div>
+		)
+	}
+}
+```
+
+### componentDidUpdate(prevProps, prevState, snapshot)
+
+tato metoda sa vola po kazdej zmene stavu v komponente. Ci uz zmenim stav z hora vramci preposlanej props alebo vnutorny stav komponenty alebo stav z metody `getSnapshotBeofreUpdate()`
+
+```jsx
+import React, { Component } from 'react'
+
+export default class Header extends Component {
+	constructor(props) {
+		super(props)
+		this.state = { favoriteColor: 'red' }
+	}
+	componentDidMount() {
+		setTimeout(() => {
+			this.setState({ favoriteColor: 'yellow' })
+		}, 1000)
+	}
+
+	componentDidUpdate() {
+		document.getElementById(
+			'div'
+		).innerHTML = `The updated favorite is ${this.state.favoriteColor}`
+	}
+
+	render() {
+		return (
+			<div>
+				<h1
+					style={{
+						color: this.state.favoriteColor,
+					}}>
+					My favorite color is {this.state.favoriteColor}
+				</h1>
+				<div id="div"></div>
+			</div>
+		)
+	}
+}
+```
+
+Domaca uloha good luck
+
+skus vytvorit novu komponentu class Footer v nej budes nacitvat pole prvkov
+to pole bude vyzerat takto
+[{title: 'text1', id: 'id-1'}, {title: 'text2', id: 'id-2'}]
+malo by to byt vo vnutri construktora definovane ako stav
+toto pole budes vykreslovat pomocou map kde kazdy prvok budes zasielat do novej komponenty s nazvom Title tato komponenta bude ocakavat title a vykreslovat ho v p elemente
+nezabudni pouzit key atribut pre kazdy prvok ale nepouzivaj index namiesto ho pouzi id z toho pola footers
+
+skus si prida button element ktori bude mat definovany onClick atribut s hodnotu addItem
+
+(nikdy nemutujeme to znamena neprepisujeme objekt a pole na novy objekt ci pole!!!)
+tuto funkciu si definuje a bude pridavat do pola novy prvok {title: 'text3', id:'id-3'}
+
+let newFooters = this.state.footers
+newFooters.push()
+sesState({footers: newFooters})
+
+### Lifecycles updating metody
