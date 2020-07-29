@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
 const Wrapper = styled.div`
 	width: 200px;
@@ -17,7 +18,7 @@ const Wrapper = styled.div`
 `
 
 const Person = ({ name, age, children, click, changed }) => {
-	const rnd = Math.random()
+	// const rnd = Math.random()
 	console.log('[Person.js] rendering')
 
 	// if (rnd > 0.7) {
@@ -34,6 +35,14 @@ const Person = ({ name, age, children, click, changed }) => {
 			<input type="text" onChange={changed} value={name} />
 		</Wrapper>
 	)
+}
+
+Person.propTypes = {
+	name: PropTypes.string.isRequired,
+	age: PropTypes.number.isRequired,
+	children: PropTypes.element.isRequired,
+	click: PropTypes.func.isRequired,
+	changed: PropTypes.func.isRequired,
 }
 
 export default Person
