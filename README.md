@@ -6,6 +6,14 @@
 - vramci používania react knižnice môžme používať jsx zápis
 - jsx je zapis javascriptu spolu s HTMLkom
 
+### Ako React funguje?
+
+React uchováva dve virtuálne DOMi starý a nový DOM.
+Starý je ten ktorí môžeš vidieť v DOMe v prehlidači už vykreslený a nový jen ktorí ešte nevidíš v prehlidači ktorí sa vytvorí po zmene stavu v komponentách. Prečo virtuálny DOM existuje je rýchlejší kedže je to reprezentácia DOMu v javascripte, všetyk HTMLka a objekty v nativnom js bez toho aby sa niečo v prehliadači vykresľovalo. V podstate si uchovava dve kopie DOMu.
+
+- Ak sa starý virtualny DOM nezdhoduje niekde z DOMom v prehlidači prekresli v DOM prehlidači len tie miesta kde sú nejaké rozdiely a uloži si nový stav vo virtulanom DOMe. Napríklad ak sa zmení text tlačidla, bude aktualizovaný iba tento text a nebude znova vykresľovať celé tlačidlo.
+- Ak sa starý virtulany DOM zhoduje s DOMom v prehliadači tak sa react nedotkne DOMu v prehliadači a preovlá sa render ktorí je možné zstaviť pomocou shouldComponentUpdate a ušetriť tak zbytočné volanie metody.
+
 ## aplikacie
 
 - single page aplication
@@ -2559,6 +2567,330 @@ const NazovKomponenty = (props) => {...}
 - class a funkcionalna komponenta sa lisi vramci manazovania stavu v komponente a vramci react metod, pre class existuju life cycle (zivotne cykly) a pre funkcionalne komponenty mame react hooks.
 - kazda class komponenta ma vo vnutri dosah na vsetko pomocou slova `this`. Napriklad na stav v komponente je dosah `this.state.nazovStavu` alebo preposlana hodnota do class komponenty `this.props.preposlanaHodnota`.
 
+### ---------------------------------------------------------------------------------------------
+
+### Specialne schopnosti Reactu
+
+#### <Fragment></Fragment> vs <></>
+
+react fragment sluzi na obalenie elementov alebo javascriptu ak nechcem zbytocne vkladat obalovaci element
+
+```jsx
+import React, { Component } from 'react'
+import Person from '../Person'
+
+export default class Persons extends Component {
+	render() {
+		return (
+			<>
+				{this.props.humans.map((human, index) => {
+					console.log('[Persons.js] rendering')
+
+					return (
+						<Person
+							key={human.id}
+							changed={event => this.props.changed(event, human.id)}
+							click={() => this.props.click(index)}
+							name={human.name}
+							age={human.age}
+						/>
+					)
+				})}
+			</>
+		)
+	}
+}
+```
+
+alebo Fragment
+
+```jsx
+import React, { Component, Fragment } from 'react'
+import Person from '../Person'
+
+export default class Persons extends Component {
+	render() {
+		return (
+			<Fragment>
+				{this.props.humans.map((human, index) => {
+					console.log('[Persons.js] rendering')
+
+					return (
+						<Person
+							key={human.id}
+							changed={event => this.props.changed(event, human.id)}
+							click={() => this.props.click(index)}
+							name={human.name}
+							age={human.age}
+						/>
+					)
+				})}
+			</Fragment>
+		)
+	}
+}
+```
+
+### Heigher order components (HOC)
+
+je komponeta vyžšieho radu, inak povedané je to komponenta funkcionalna alebo classova ktorá prevezme komponent a vráti nový doplnený komponent.
+
+HO v jednoduchom javascripte priklad
+
+```js
+function nasobok(cislo) {
+	return x => x * cislo
+}
+
+const nasobokDvoma = nasobok(2)
+console.log(nasobokDvoma(2)) // 4
+const nasobokTroma = nasobok(3)
+console.log(nasobokTroma(3)) // 9
+const nasobokDesiatimi = nasobok(10)
+console.log(nasobokDesiatimi(3)) // 30
+```
+
+priklad HOC v reacte doplnanie atributu name
+
+naskor sme vyrobili funkcionalnu komponentu Hello
+
+```jsx
+import React from 'react'
+
+const Hello = props => {
+	return <h1>Hello {props.name}!</h1>
+}
+
+export default Hello
+```
+
+nasledne vytvorim HO funkciu withNameReact s class komponentov
+
+```jsx
+import React from 'react'
+
+export default function withNameReact(WrappedComponent) {
+	// zasielam do vnutra komponentu ktora bude doplnena o atribut name
+	return class extends React.Component {
+		render() {
+			// vraciam zaslanu komponentu do vnutra uz s definovanym name atributom
+			return <WrappedComponent name="React" {...this.props} />
+		}
+	}
+}
+```
+
+zapis cez funkciu
+
+```jsx
+import React from 'react'
+
+export default function withNameReact(WrappedComponent) {
+	return function ({ children, ...props }) {
+		return <WrappedComponent name="React" {...props} />
+	}
+}
+```
+
+zapis cez arrow function
+
+```jsx
+import React from 'react'
+
+const withNameReact = WrappedComponent => ({ children, ...props }) => (
+	<WrappedComponent name="React" {...props} />
+)
+
+export default withNameReact
+```
+
+použitie v App
+
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Hello from './components/Hello'
+import withNameReact from './hoc/withNameReact'
+
+// vytvorim si novy komponentu ktora bude obsahovat HOC
+const NewComponent = withNameReact(Hello)
+
+ReactDOM.render(<NewComponent />, document.getElementById('root'))
+```
+
+priklad HOC v reacte pridavanie farby
+
+upravim si Hello komponentu o nacitanie preposlanych props
+
+```jsx
+import React from 'react'
+
+const Hello = props => {
+	return <h1 {...props}>Hello {props.name}!</h1>
+}
+
+export default Hello
+```
+
+vytvorim si HOC withColor ktora bude pridavat farbu pisma cervena
+
+```jsx
+import React from 'react'
+
+const withColor = Element => props => (
+	<Element style={{ color: 'red' }} {...props} />
+)
+
+export default withColor
+```
+
+pouzitie v App
+
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Hello from './components/Hello'
+import withColor from './hoc/withColor'
+
+// vytvorim si novy komponentu ktora bude obsahovat HOC
+const NewComponent = withColor(Hello)
+
+ReactDOM.render(<NewComponent />, document.getElementById('root'))
+```
+
+priklad HOC v reacte reverse textu preposlany cez children
+
+priklad HOC funkcie ktora reversne children text a vrati novu komponentu s reversnutym textom
+
+```jsx
+import React from 'react'
+
+const withReverse = PassedComponent => props => {
+	return (
+		<PassedComponent {...props}>
+			{props.children.split('').reverse().join('')}
+		</PassedComponent>
+	)
+}
+
+export default withReverse
+```
+
+pouzitie v App
+
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom'
+import withReverse from './hoc/withReverse'
+
+const Name = props => <span>{props.children}</span>
+
+const ReversedName = withReverse(Name)
+
+ReactDOM.render(
+	<ReversedName>Hello</ReversedName>,
+	document.getElementById('root')
+)
+```
+
+[link na priklad s HOC ktora obsahuje metody na kontrolu ci je user prihlaseny alebo nie](https://levelup.gitconnected.com/understanding-react-higher-order-components-by-example-95e8c47c8006)
+
+#### PropTypes [link](https://reactjs.org/docs/typechecking-with-proptypes.html)
+
+tento doplnok vieme nainstalovat pomocou prikazu
+
+```
+npm i prop-types
+
+```
+
+priklad pouzitia
+
+```jsx
+import React from 'react'
+import PropTypes from 'prop-types'
+import Person from '../Person'
+
+const Persons = props => {
+	return (
+		<div>
+			{props.humans.map((human, index) => {
+				console.log('[Persons.js] rendering')
+
+				return (
+					<Person
+						key={human.id}
+						changed={event => props.changed(event, human.id)}
+						click={() => props.click(index)}
+						name={human.name}
+						age={human.age}
+					/>
+				)
+			})}
+		</div>
+	)
+}
+
+Persons.propTypes = {
+	humans: PropTypes.array.isRequired,
+}
+
+export default Persons
+```
+
+a dalsi priklad
+
+```jsx
+import React from 'react'
+import styled from 'styled-components'
+import PropTypes from 'prop-types'
+
+const Wrapper = styled.div`
+	width: 200px;
+	margin: 16px;
+	border: 1px solid black;
+	box-shadow: 0 2px 3px #ccc;
+	padding: 15px;
+	text-align: center;
+
+	@media (min-width: 500px) {
+		.wrapper {
+			width: 450px;
+		}
+	}
+`
+
+const Person = ({ name, age, children, click, changed }) => {
+	// const rnd = Math.random()
+	console.log('[Person.js] rendering')
+
+	// if (rnd > 0.7) {
+	// 	throw new Error('Something went wrong')
+	// }
+
+	return (
+		<Wrapper>
+			<p onClick={click}>remove person</p>
+			<p>
+				I'am a {name} and I am {age} years old!
+			</p>
+			{children && <p>{children}</p>}
+			<input type="text" onChange={changed} value={name} />
+		</Wrapper>
+	)
+}
+
+Person.propTypes = {
+	name: PropTypes.string.isRequired,
+	age: PropTypes.number.isRequired,
+	children: PropTypes.element.isRequired,
+	click: PropTypes.func.isRequired,
+	changed: PropTypes.func.isRequired,
+}
+
+export default Person
+```
+
 ## react life cycles
 
 react umoznuje definovat komponenty ako triedy alebo funkcie. Komponenty definovane ako triedy v sucasnosti poskytuju viac funkcii, ktore nazyvame `life cycle`. Ak chceme definovat class komponent od reactu, musime rozsirit tuto classu o React.Component
@@ -2605,7 +2937,9 @@ tieto metody sa volaju ked dojde k chybe pocas vykreslovania alebo v metode life
 
 ### ---------------------------------------------------------------------------------------------
 
-### constructor(props)
+### mounting metody:
+
+#### constructor(props)
 
 ked je component vytvoreny ako prve je volana metoda konstruktor. Je to defaultna metoda vramci ES6 class schopnosti. Podstatna vec je, ze tento konstruktor dokaze prijimat props z vonku ale vo vnutri konstruktora sa musi volat metoda `super(props)`. Samotny konstruktor nemusi byt definovany v kazdej class komponente. Okrem nacitania props sa v konstuktore definuju vsetky zaciatocne stavy komponenty. Vo vnutri konstruktora by sa nemali zapisovat metody HTTP requestov alebo zoradovanie niecoho vramci local storagu v prehliadaci, alebo zasielanie nejakych dat tretej strane.<br>
 
@@ -2669,7 +3003,7 @@ export default class Example extends Component {
 }
 ```
 
-### static getDerivedStateFromProps(props,state)
+#### static getDerivedStateFromProps(props,state)
 
 je to metoda, ktora sa vola tesne pred volanim metody `render()`, t.j. pri uvodnom nacitani komponenty a tiez aj pri zmene stavu, teda aktualizaciach. Tato metoda by mala vracat objekt na aktualizaciu stavu, alebo null. Tato metoda sa zriedkavo pouziva, ked stav zavisi od zmien v props v priebehu casu. <br>
 Napriklad by mohlo byt uzitocne implementovat komponent `<Transition>`, ktory porovnava jeho predchadzajuce a nasledujuce children a rozhoduje, ktore z nich sa budu animovat.
@@ -2697,11 +3031,11 @@ export default class Example extends Component {
 }
 ```
 
-### render()
+#### render()
 
 Jedina metoda, ktoru musime definovat v class komponente je `render()`
 
-### componentDidMount()
+#### componentDidMount()
 
 Metoda sa vola po vlozeni a vykresleni metody do DOM. V nej by sme mohli definovat nejakeho posluchaca na nejaky event, nejaky asynchronny kod, request na databazu.
 
@@ -2728,15 +3062,13 @@ export default class Example extends Component {
 }
 ```
 
-### life cycles mounting metody
-
 najskôr zašlime title atribut do App komponenty takto
 
 ```jsx
 <App title="Example title" />
 ```
 
-definujem si console.log pre constructor, getDerivedStateFromProps, componentDidMount, vramci render metody App komponenty a vo vnútri Person komponenty a pokusme sa vytvorit novu komponentu Persons. Tato komponenta bude vykreslovat zoznam humans tiez definujme console log v tejto komponente pre kazdy napamovany prvok z pola. Pozrime sa kedy su dane console.logi volane v prehliadaci v dev tools terminaly. Vidime najskôr log constructor potom getDerivedStateFromProps nasledne render nasledne componentDidMount. Nevidime log ktori je definovany v Persons komponente, pretoze to nie je e3te vzkreslene v DOM. Po kliknuti na tlacidlo uvidime aj dany Persons a person rendering kedze dane komponenty boli volane a aby sa vykreslili...
+definujem si console.log pre constructor, getDerivedStateFromProps, componentDidMount, vramci render metody App komponenty a vo vnútri Person komponenty a pokusme sa vytvorit novu komponentu Persons. Tato komponenta bude vykreslovat zoznam humans tiez definujme console log v tejto komponente pre kazdy namapovany prvok z pola. Pozrime sa kedy su dane console.logi volane v prehliadaci v dev tools terminaly. Vidime najskôr log constructor potom getDerivedStateFromProps nasledne render nasledne componentDidMount. Nevidime log ktory je definovany v Persons komponente, pretoze to nie je este vykreslene v DOM. Po kliknuti na tlacidlo uvidime aj dany Persons a person rendering kedze dane komponenty boli volane a aby sa vykreslili...
 
 ```jsx
 class App extends Component {
@@ -2899,7 +3231,9 @@ export default Person
 
 ### ---------------------------------------------------------------------------------------------
 
-### shouldComponentUpdate()
+### update metody:
+
+#### shouldComponentUpdate()
 
 metoda je volana pred vykreslenim do DOM. Nemala by sa pouzivat ak pouzivame metodu `forceUpdate()`
 je metoda ktora ma vraciat boolean hodnotu a ta urcuje kedy ma alebo nema komponenta pokracovat vo vykreslvoani do DOM. Málo používaná metoda a nepoužívať v nej porovnania hodnot vramci JSON.strigify
@@ -2978,7 +3312,7 @@ export default class Header extends Component {
 ReactDOM.render(<Header />, document.getElementById('root'))
 ```
 
-### getSnapshotBeforeUpdate(prevProps, prevState)
+#### getSnapshotBeforeUpdate(prevProps, prevState)
 
 tato metoda sa vyvola tesne predtym, ako sa posledny vykresleny vstup vlozi do DOM. Umoznuje vramci komponenty zachytit props a state pred aktualizaciou, co znamena ze aj po aktualizacii je moze skontrolovat ake hodnoti boli pred aktualizaciou. Inac povedan prepisem po prvy krat stav red na novy stav yellow a vramci metody `getSnapshotBeforeUpdate(prevProps, prevState)` mam stale ulozeny predosli stav red ako v tomto priklade.
 
@@ -3033,7 +3367,7 @@ export default class Header extends Component {
 }
 ```
 
-### componentDidUpdate(prevProps, prevState, snapshot)
+#### componentDidUpdate(prevProps, prevState, snapshot)
 
 tato metoda sa vola po kazdej zmene stavu v komponente. Ci uz zmenim stav z hora vramci preposlanej props alebo vnutorny stav komponenty alebo stav z metody `getSnapshotBeofreUpdate()`
 
@@ -3073,22 +3407,690 @@ export default class Header extends Component {
 }
 ```
 
-Domaca uloha good luck
+### ---------------------------------------------------------------------------------------------
 
-skus vytvorit novu komponentu class Footer v nej budes nacitvat pole prvkov
-to pole bude vyzerat takto
-[{title: 'text1', id: 'id-1'}, {title: 'text2', id: 'id-2'}]
-malo by to byt vo vnutri construktora definovane ako stav
-toto pole budes vykreslovat pomocou map kde kazdy prvok budes zasielat do novej komponenty s nazvom Title tato komponenta bude ocakavat title a vykreslovat ho v p elemente
-nezabudni pouzit key atribut pre kazdy prvok ale nepouzivaj index namiesto ho pouzi id z toho pola footers
+### unmounting metoda:
 
-skus si prida button element ktori bude mat definovany onClick atribut s hodnotu addItem
+#### componentWillUnmount
 
-(nikdy nemutujeme to znamena neprepisujeme objekt a pole na novy objekt ci pole!!!)
-tuto funkciu si definuje a bude pridavat do pola novy prvok {title: 'text3', id:'id-3'}
+ked sa komponent odstranuje z DOM vramci class komponenty pouzivame na to metodu `componentWillUnmount()`. Radi sa medzi `unmounting` metodu. Vramci react buducnosti bude tato metoda odstranena, nedoporucuje sa pouzivat pri tvorbe komponent. Priklad:
 
-let newFooters = this.state.footers
-newFooters.push()
-sesState({footers: newFooters})
+```jsx
+import React, { Component } from 'react'
+import Child from '../Child'
 
-### Lifecycles updating metody
+export default class Container extends Component {
+	constructor(props) {
+		super(props)
+		this.state = { show: true }
+	}
+	deleteChild = () => {
+		this.setState({ show: false })
+	}
+
+	render() {
+		let myheader = null
+		if (this.state.show) {
+			myheader = <Child />
+		}
+		return (
+			<div>
+				{myheader}
+				<button type="button" onClick={this.deleteChild}>
+					Delete Child
+				</button>
+			</div>
+		)
+	}
+}
+```
+
+a pouzitie componentWillUnmount()
+
+```jsx
+import React, { Component } from 'react'
+
+export default class Child extends Component {
+	componentWillUnmount() {
+		alert('Child component je unmounted.')
+	}
+	render() {
+		return <h1>Hellow world!</h1>
+	}
+}
+```
+
+### ---------------------------------------------------------------------------------------------
+
+### Error handling metody:
+
+#### static getDerivedStateFromError()
+
+Tento životný cyklus sa zavolá pri vzniku chyby v definovanej komponente. Dostane chybu, ktorá bola vyvolaná ako parameter a mala by vratiť hodnotu do stavu aktualizácie.
+
+```jsx
+import React, { Component } from 'react'
+
+class ErrorBoundary extends Component {
+	state = {
+		hasError: false,
+	}
+
+	static getDerivedStateFromError(error) {
+		return { hasError: true }
+	}
+
+	render() {
+		if (this.state.hasError) {
+			return <h1>Something went wrong.</h1>
+		}
+		return this.props.children
+	}
+}
+
+export default ErrorBoundary
+```
+
+ak by som chcel otestovať tuto metodu musim vytvoriť vlastný error a to týmto spôsobom
+
+```jsx
+throw new Error('Something went wrong')
+```
+
+```jsx
+ReactDOM.render(
+	<ErrorBoundary>
+		<App />
+	</ErrorBoundary>,
+	document.getElementById('root')
+)
+```
+
+### componentDidCatch(error, info)
+
+Tento životný cyklus sa vyvola po vyvolani chyby v definovanej komponente. Prijmam dva parametre:
+
+- error - chyba, ktora bola vyvolana.
+- info - objekt obsahujuci informacie o tom, ktora komponenta sposobila chybu.
+
+```jsx
+import React, { Component } from 'react'
+
+class ErrorBoundary extends Component {
+	state = {
+		hasError: false,
+		errorMessage: null,
+		errorInfo: null,
+	}
+
+	componentDidCatch = (error, errorInfo) => {
+		// na tomto mieste by sa mala pouzit nejaka sluzba ktora zaznamenava chyby
+		this.setState({ hasError: true, errorMessage: error, errorInfo: errorInfo })
+	}
+
+	render() {
+		if (this.state.hasError) {
+			return <h1>{this.state.errorMessage.toString()}</h1>
+		}
+		return this.props.children
+	}
+}
+
+export default ErrorBoundary
+```
+
+```jsx
+import React, { Component } from 'react'
+
+export default class Container extends Component {
+	trowError = () => {
+		throw new Error('Something went wrong')
+	}
+
+	render() {
+		return (
+			<div>
+				<button type="button" onClick={this.trowError}>
+					create error
+				</button>
+			</div>
+		)
+	}
+}
+```
+
+```jsx
+ReactDOM.render(
+	<ErrorBoundary>
+		<Container />
+	</ErrorBoundary>,
+	document.getElementById('root')
+)
+```
+
+alebo môžeme použiť bežný try a catch
+
+```jsx
+import React, { Component } from 'react'
+
+export default class Container extends Component {
+	trowError = () => {
+		try {
+			throw new Error('Something went wrong')
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	render() {
+		return (
+			<div>
+				<button type="button" onClick={this.trowError}>
+					create error
+				</button>
+			</div>
+		)
+	}
+}
+```
+
+### ---------------------------------------------------------------------------------------------
+
+### react hooks pre funkcionalne komponenty
+
+hooky môžme používať len vo funkcionalných komponentách a len vo vnútri komponente.
+
+#### useState()
+
+tento hook slúži na uloženie stavu, v pravej časti je metoda hooku useState ktora očakáva vstupný parameter ako začiatočný stav a v ľavej časti hooku je pole pomocou ktorého deštrujeme ľavu časť hoooku t.j. vyťahujeme hodnoty konkretne state je hodnota stavu buď začiatočný stav alebo prepisaný nový stav a druhá hodnota v poli je metoda pomocou ktorej viem prepisať začiatočný stav na nový stav.
+
+```jsx
+const [state, setstate] = useState(initialState)
+```
+
+```jsx
+import React, { useState } from 'react'
+
+const Counter = () => {
+	const [count, setCount] = useState(0)
+
+	return (
+		<div style={{ textAlign: 'center', padding: '20px' }}>
+			Počet: {count}
+			<div>
+				<button onClick={() => setCount(0)}>Reset</button>
+			</div>
+			<div>
+				<button onClick={() => setCount(count + 1)}>+</button>
+			</div>
+			<div>
+				<button onClick={() => setCount(count - 1)}>-</button>
+			</div>
+		</div>
+	)
+}
+
+export default Counter
+```
+
+```jsx
+ReactDOM.render(<Counter />, document.getElementById('root'))
+```
+
+#### useEffect()
+
+tato metoda sa vždy vola pri začiatočnom načítani komponenty a tiež pri každej zmene stavu či props. Táto metoda je kombinaciou týchto class lifecycle metod: `componentDidMount()`, `componentDidUpdate()` a `componentWillUnmount()`. Tento hook sa väčšinou používa na načitanie začiatočných dát ak robime request nad databazou z back-endu pomocou fetch, axios,...
+
+```jsx
+const Animation = () => {
+	const [start, setStart] = useState(false)
+	const [color, setColor] = useState('red')
+
+	useEffect(() => {
+		console.log('useEffect', start)
+		const timer = setTimeout(() => {
+			console.log('rotating stop')
+			setColor('red')
+			setStart(false)
+		}, 3000)
+		return () => clearTimeout(timer)
+	}, [start]) // tým že sme definovali v poli start stav useEffect je volany na začiatku načitania stranky a vždy po zmene stavu start
+
+	return (
+		<Center>
+			<Spin start={start} color={color} />
+			<button type="button" onClick={() => setStart(true)}>
+				start rotating
+			</button>
+			<button type="button" onClick={() => setStart(false)}>
+				stop rotating
+			</button>
+			<button type="button" onClick={() => setColor('blue')}>
+				change color
+			</button>
+		</Center>
+	)
+}
+
+export default Animation
+```
+
+alebo
+
+```jsx
+import React, { useState, useEffect } from 'react'
+
+const Animation = () => {
+	const [name, setName] = useState({ title: '', first: '', last: '' })
+
+	useEffect(async () => {
+		const res = await fetch('https://randomuser.me/api/')
+		const json = await res.json()
+		setName(json.results[0].name)
+	}, []) // ak definujem prazdne pole pre useEffect to znamena ze je volany iba raz a to na zaciatku zobrazenia stranky s touto komponentou
+
+	return (
+		<div>{`The person name is: ${name.title} ${name.first} ${name.last}`}</div>
+	)
+}
+```
+
+alebo
+
+```jsx
+const Animation = () => {
+	const [start, setStart] = useState(false)
+	const [color, setColor] = useState('red')
+
+	useEffect(() => {
+		console.log('useEffect', start)
+		const timer = setTimeout(() => {
+			console.log('rotating stop')
+			setColor('red')
+			setStart(false)
+		}, 3000)
+		return () => clearTimeout(timer)
+	}) // tým že sme nedefinovali ani pole start useEffect je volany na začiatku načitania stranky a po každej zmene stavu
+
+	return (
+		<Center>
+			<Spin start={start} color={color} />
+			<button type="button" onClick={() => setStart(true)}>
+				start rotating
+			</button>
+			<button type="button" onClick={() => setStart(false)}>
+				stop rotating
+			</button>
+			<button type="button" onClick={() => setColor('blue')}>
+				change color
+			</button>
+		</Center>
+	)
+}
+
+export default Animation
+```
+
+#### React.createContext() vs useContext() [link](https://reactjs.org/docs/context.html#reactcreatecontext)
+
+React Context API je spôsob, ako v podstate vytvárať globálne premenné, ktoré môžu byť prenášané v aplikácii React.Je to alternatíva k preposielaniu props. Kontext poskytuje spôsob, ako preniesť dáta cez strom komponentov bez nutnosti definovania a odovzdávania hodnoty props na každej úrovni.
+
+Predstavme si, že mám nejaké informácie, ktoré chcem aby boli k dispozícii kdekoľvek alebo všade v každej react komponente.
+
+##### React.createContext()
+
+Najskôr si vytvorim konštantu UserContext do ktorej vložim vytvorenie kontextu `React.createContext()`. Následne si vytvorím dve košntanty prvá bude mať ľubovoľný názov so slovom Provider ktorá bude obshaovať `UserContext.Provider` a druhá konštanta bude mať ľubovoľný názov so slovom Consumer ktorá bude obsahovať `UserContext.Consumer`. Samozrejme ak ich chceme niekde v priečinkovej štrukture použiť musia byť vyexportované. To čo tieto dve konštanty teda komponenty robia, je jednoduché:
+
+- UserProvider je komponenta pre ktorú môžem definovať globalny atribut s hodnotou value
+- UserConsumer je komponenta ktorou keď obalim inú komponentu dokážem preposlať všetky definované hodnoty v UserProvider.
+
+```jsx
+import React from 'react'
+
+const UserContext = React.createContext()
+
+export const UserProvider = UserContext.Provider
+export const UserConsumer = UserContext.Consumer
+
+export default UserContext
+```
+
+UserProvider
+
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom'
+import HomePage from './components/HomePage'
+import { UserProvider } from './context/userContext'
+import * as serviceWorker from './serviceWorker'
+
+const App = () => {
+	// user konštanta bude globalne preposlana všade kde použijem UserConsumer
+	const user = { name: 'Duri traktorista', loggedIn: true }
+
+	return (
+		<UserProvider value={user}>
+			<HomePage />
+		</UserProvider>
+	)
+}
+
+ReactDOM.render(<App />, document.getElementById('root'))
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister()
+```
+
+Usercontext
+
+```jsx
+import React, { Component } from 'react'
+import UserContext from '../../context/userContext'
+
+export default class HomePage extends Component {
+	static contextType = UserContext
+	render() {
+		return <div>{this.context.name}</div>
+	}
+}
+```
+
+alebo modernejší zapis
+
+```jsx
+import React, { Component } from 'react'
+import { UserConsumer } from '../../context/userContext'
+
+export default class HomePage extends Component {
+	render() {
+		return <UserConsumer>{props => <div>{props.name}</div>}</UserConsumer>
+	}
+}
+```
+
+##### useContext()
+
+naskôr vytvorim context
+
+./context/ColorContext/index.js
+
+```jsx
+import React from 'react'
+
+export const ColorContext = React.createContext()
+```
+
+./index.js
+
+```jsx
+import React from 'react'
+import ReactDOM from 'react-dom'
+import HomePage from './components/HomePage'
+import { ColorContext } from './context/ColorContext'
+import * as serviceWorker from './serviceWorker'
+
+const App = () => {
+	const colors = {
+		blue: 'blue',
+		white: '#fff',
+		black: '#000',
+	}
+	return (
+		<ColorContext.Provider value={colors}>
+			<HomePage />
+		</ColorContext.Provider>
+	)
+}
+
+ReactDOM.render(<App />, document.getElementById('root'))
+serviceWorker.unregister()
+```
+
+pouzite hooku `useContext` namiesto `Consumer` hodnoty z kontextu
+
+```jsx
+import React, { useContext } from 'react'
+import { ColorContext } from '../../context/ColorContext'
+
+const HomePage = () => {
+	const colors = useContext(ColorContext)
+	console.log(colors)
+	return <div>Duri traktorista</div>
+}
+export default HomePage
+```
+
+##### useMemo()
+
+Očakava dve vstupné hodnoty a to funkciu ktoru chcem optimalizovať keď sa zmenia vstupy a druhá vstupná hodnota je pole [] v ktorom definujem premenne podla ktorich useMemo nebude pou69va5 cash pamäť ale znova danú funkciu prevolá. Táto optimalizácia pomáha vyhnúť sa nákladným vypočtom pri každom vykreslení komponenty.
+
+UseMemo umožňuje zapamätať si výsledok funkcie a tento výsledok bude vraciať kým sa nezmení pole závislotí.
+
+```jsx
+import React, { useState } from 'react'
+
+const Welcome = () => {
+	const [msg, setMsg] = useState('Hello')
+
+	const reverseMsg = () => {
+		console.log('ahoj')
+		return msg.split('').reverse().join('')
+	}
+
+	return (
+		<div>
+			<h1>{msg}</h1>
+			<h1>{reverseMsg()}</h1>
+			<h1>{reverseMsg()}</h1>
+			<button onClick={() => setMsg('vajco')}>prevrat text v nadpisoch</button>
+		</div>
+	)
+}
+export default Welcome
+```
+
+kedže sme použíli reverseMsg funkciu na dvoch miestach na dosiahnutie rovnakého výsledku v tomto prípade môžeme použíť na optimalizaicu kódu useMemo hook takto
+
+```jsx
+import React, { useState, useMemo } from 'react'
+
+const Welcome = () => {
+	const [msg, setMsg] = useState('Hello')
+
+	const reverseMsg = useMemo(() => {
+		console.log('ahoj')
+		return msg.split('').reverse().join('')
+	}, [msg])
+
+	return (
+		<div>
+			<h1>{msg}</h1>
+			<h1>{reverseMsg}</h1>
+			<h1>{reverseMsg}</h1>
+			<button onClick={() => setMsg('vajco')}>prevrat text v nadpisoch</button>
+		</div>
+	)
+}
+export default Welcome
+```
+
+Vo vyššie uvedenom kóde sme zabalili funkciu pomocou hooku useMemo() tato funkcia vráti memoizovanú hodnotu alebo hodnotu uloženú v pamäti, ktorá je uložená vo vnútri premennej reverseMsg.
+
+Teraz môžeme použiť reverseMsg na viacerých miestach, ale funkcia sa spustí iba raz a nabudúce okamžite vráti hodnotu z vyrovnávacej pamäte.
+
+Háčik useMemo znova spustí túto funkciu, len keď sa zmení jedna z jej závislostí.
+
+To znamená, že ak klikneme na tlačidlo Change Msg, bude aktualizovaná vlastnosť msg. takže sa zmení závislosť háčika useMemo a znova spustite funkciu, aby ste získali novú hodnotu v pamäti.
+
+Pri rozhodovaní o aktualizácii DOM najskôr React najskôr vykreslí vašu komponentu a potom porovná výsledok s predchádzajúcim výsledkom vykreslenia. Ak sú výsledky vykreslenia odlišné, React aktualizuje DOM.
+
+Porovnanie vysledku súčastného a predchádzajúceho vykreslenia je rýchle. Za určitých okolností však môžeme tento proces urýchliť.
+
+Keď je komponent zabalený do React.memo(MojaKomponenta), React komponent vykresli a yap93e si v7sledok. Ak sú nové props pred ďalším vykreslením rovnaké, React znova použije memoizovaný výsledok, ktorí preskočí a rovno komponentu vykresli.
+
+```jsx
+import React from 'react'
+
+export const Movie = props => {
+	return (
+		<div>
+			<div>Movie title: {props.title}</div>
+			<div>Release data: {props.releaseDate}</div>
+		</div>
+	)
+}
+
+export const MemoizedMovie = React.memo(Movie)
+```
+
+```jsx
+const App = () => {
+	return (
+		<>
+			<MemoizedMovie title="Heat" releaseDate="December 15. 1999" />
+			<MemoizedMovie title="Heat" releaseDate="December 15. 1999" />
+		</>
+	)
+}
+ReactDOM.render(<App />, document.getElementById('root'))
+```
+
+##### useRef()
+
+useRef hook nám pomáha získať prístup k DOM uzlom alebo html prvkom, aby sme mohli s týmto prvkom samotný DOM iteragovať, napríklad prístup k hodnote vstupného prvku alebo zaostrenie vstuného prvku.
+
+```jsx
+import React, { useRef } from 'react'
+
+const TextInput = () => {
+	const inputRef = useRef(null)
+	const handleFocus = () => {
+		console.log(inputRef)
+		inputRef.current.focus()
+	}
+	return (
+		<div>
+			<input placeholder="name" ref={inputRef} />
+			<button onClick={handleFocus}>daj kurzor do inputu</button>
+		</div>
+	)
+}
+export default TextInput
+```
+
+Vo vyššie uvedenom priklade sme naimportovali hook useRef a potom sme vyvolali tento hook s počiatočnou hodnotou null.
+
+V inpute sme definovali ref atribut s hodnotou inputRef, aby sme k tomuto input elementu mali pristup pomocou premennej inputRef.current
+
+```jsx
+import React, { Component } from 'react'
+
+export default class FormRef extends Component {
+	constructor(props) {
+		super(props)
+		this.inputRef = React.createRef()
+		this.state = {
+			value: '',
+		}
+	}
+
+	handleSubmit = e => {
+		e.preventDefault()
+		this.setState({ value: this.inputRef.current.value })
+	}
+
+	render() {
+		return (
+			<div>
+				<h1>React Ref - createRef</h1>
+				<h3>value: {this.state.value}</h3>
+				<form onSubmit={this.handleSubmit}>
+					<input type="text" ref={this.inputRef} />
+					<button>Submit</button>
+				</form>
+			</div>
+		)
+	}
+}
+```
+
+##### useReducer
+
+```js
+const numbers = [175, 50, 25]
+
+const sum = (total, num) => {
+	return total + num
+}
+
+console.log(numbers.reduce(sum))
+```
+
+`reduce` metoda redukuje pole na jedenu hodnotu. Tato metoda vykononá definovanú funkciu pre každý prvok z pola z ľava do prava. Vratena hodnota z definovane funkcie je ulozena do akumulatora total.
+
+```js
+pole.reduce(function(začiatočná_hodnota_alebo_predchadzajuca_navaratova_hodnota_z_funkcie, hodnota_aktualneho_prvku, index_aktualneho_prvku, pole), zaciatocna_hodnota)
+```
+
+priklad pocitadla v reacte pomocou useState
+
+```jsx
+import React, { useState } from 'react'
+
+export function Example1() {
+	const [state, setstate] = useState(0)
+
+	const spocitaj = () => {
+		setstate(state + 1)
+	}
+
+	const odpocitaj = () => {
+		setstate(state - 1)
+	}
+
+	const reset = () => {
+		setstate(0)
+	}
+	return (
+		<>
+			počet: {state}
+			<button onClick={odpocitaj}>-</button>
+			<button onClick={spocitaj}>+</button>
+			<button onClick={reset}>reset</button>
+		</>
+	)
+```
+
+priklad pocitadla aj s resetom pomocou useReducer
+
+```jsx
+import React, { useReducer } from 'react'
+
+export function Example1() {
+	const reducer = (count, action) => {
+		switch (action) {
+			case 'spocitaj':
+				return count + 1
+			case 'odpocitaj':
+				return count - 1
+			case 'reset':
+				return 0
+			default:
+				throw new Error()
+		}
+	}
+
+	const [count, dispatch] = useReducer(reducer, 0)
+
+	return (
+		<>
+			počet: {count}
+			<button onClick={() => dispatch('odpocitaj')}>-</button>
+			<button onClick={() => dispatch('spocitaj')}>+</button>
+			<button onClick={() => dispatch('reset')}>reset</button>
+		</>
+	)
+}
+```

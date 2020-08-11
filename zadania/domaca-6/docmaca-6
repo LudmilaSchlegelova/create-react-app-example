@@ -1,0 +1,17 @@
+Domaca uloha good luck
+
+skus vytvorit novu komponentu class Footer v nej budes nacitvat pole prvkov
+to pole bude vyzerat takto
+[{title: 'text1', id: 'id-1'}, {title: 'text2', id: 'id-2'}]
+malo by to byt vo vnutri construktora definovane ako stav
+toto pole budes vykreslovat pomocou map kde kazdy prvok budes zasielat do novej komponenty s nazvom Title tato komponenta bude ocakavat title a vykreslovat ho v p elemente
+nezabudni pouzit key atribut pre kazdy prvok ale nepouzivaj index namiesto neho pouzi id z toho pola footers
+
+skus si prida button element ktory bude mat definovany onClick atribut s hodnotu addItem
+
+(nikdy nemutujeme to znamena neprepisujeme objekt a pole na novy objekt ci pole!!!)
+tuto funkciu si definuje a bude pridavat do pola novy prvok {title: 'text3', id:'id-3'}
+
+let newFooters = this.state.footers
+newFooters.push()
+sesState({footers: newFooters})
