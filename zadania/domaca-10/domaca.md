@@ -2,7 +2,7 @@
 
 2. nasledne tuto komponentu Nadpis pouzi 3 krat pod sebou a vloz im rovnaky text napr vajco
 
-3. baskedbe v tejto komponente pouzi React.memo() a obal jej export
+3. naskedbe v tejto komponente pouzi React.memo() a obal jej export
 
 4. skus vytvorit komponentu Input v ktorej budes vyuzivat useRef hook na to aby si vypisovala do p elementu obsah ktori pises do inputu t.j.
 

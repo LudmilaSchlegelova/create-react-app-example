@@ -8,8 +8,8 @@
 
 ### Ako React funguje?
 
-React uchováva dve virtuálne DOMi starý a nový DOM.
-Starý je ten ktorí môžeš vidieť v DOMe v prehlidači už vykreslený a nový jen ktorí ešte nevidíš v prehlidači ktorí sa vytvorí po zmene stavu v komponentách. Prečo virtuálny DOM existuje je rýchlejší kedže je to reprezentácia DOMu v javascripte, všetyk HTMLka a objekty v nativnom js bez toho aby sa niečo v prehliadači vykresľovalo. V podstate si uchovava dve kopie DOMu.
+React uchováva dve virtuálne DOMy starý a nový DOM.
+Starý je ten, ktorý môžeš vidieť v DOMe v prehliadači už vykreslený a nový je ten, ktorý ešte nevidíš v prehlidači ktorý sa vytvorí po zmene stavu v komponentách. Prečo virtuálny DOM existuje je rýchlejší kedže je to reprezentácia DOMu v javascripte, všetyk HTMLka a objekty v nativnom js bez toho aby sa niečo v prehliadači vykresľovalo. V podstate si uchovava dve kopie DOMu.
 
 - Ak sa starý virtualny DOM nezdhoduje niekde z DOMom v prehlidači prekresli v DOM prehlidači len tie miesta kde sú nejaké rozdiely a uloži si nový stav vo virtulanom DOMe. Napríklad ak sa zmení text tlačidla, bude aktualizovaný iba tento text a nebude znova vykresľovať celé tlačidlo.
 - Ak sa starý virtulany DOM zhoduje s DOMom v prehliadači tak sa react nedotkne DOMu v prehliadači a preovlá sa render ktorí je možné zstaviť pomocou shouldComponentUpdate a ušetriť tak zbytočné volanie metody.
@@ -3864,7 +3864,7 @@ export default HomePage
 
 ##### useMemo()
 
-Očakava dve vstupné hodnoty a to funkciu ktoru chcem optimalizovať keď sa zmenia vstupy a druhá vstupná hodnota je pole [] v ktorom definujem premenne podla ktorich useMemo nebude pou69va5 cash pamäť ale znova danú funkciu prevolá. Táto optimalizácia pomáha vyhnúť sa nákladným vypočtom pri každom vykreslení komponenty.
+Očakava dve vstupné hodnoty a to funkciu ktoru chcem optimalizovať keď sa zmenia vstupy a druhá vstupná hodnota je pole [] v ktorom definujem premenne podla ktorych useMemo nebude pouzivat cash pamäť ale znova danú funkciu prevolá. Táto optimalizácia pomáha vyhnúť sa nákladným vypočtom pri každom vykreslení komponenty.
 
 UseMemo umožňuje zapamätať si výsledok funkcie a tento výsledok bude vraciať kým sa nezmení pole závislotí.
 
@@ -3924,11 +3924,11 @@ Háčik useMemo znova spustí túto funkciu, len keď sa zmení jedna z jej záv
 
 To znamená, že ak klikneme na tlačidlo Change Msg, bude aktualizovaná vlastnosť msg. takže sa zmení závislosť háčika useMemo a znova spustite funkciu, aby ste získali novú hodnotu v pamäti.
 
-Pri rozhodovaní o aktualizácii DOM najskôr React najskôr vykreslí vašu komponentu a potom porovná výsledok s predchádzajúcim výsledkom vykreslenia. Ak sú výsledky vykreslenia odlišné, React aktualizuje DOM.
+Pri rozhodovaní o aktualizácii DOM React najskôr vykreslí vašu komponentu a potom porovná výsledok s predchádzajúcim výsledkom vykreslenia. Ak sú výsledky vykreslenia odlišné, React aktualizuje DOM.
 
 Porovnanie vysledku súčastného a predchádzajúceho vykreslenia je rýchle. Za určitých okolností však môžeme tento proces urýchliť.
 
-Keď je komponent zabalený do React.memo(MojaKomponenta), React komponent vykresli a yap93e si v7sledok. Ak sú nové props pred ďalším vykreslením rovnaké, React znova použije memoizovaný výsledok, ktorí preskočí a rovno komponentu vykresli.
+Keď je komponent zabalený do React.memo(MojaKomponenta), React komponent vykresli a zapise si vysledok. Ak sú nové props pred ďalším vykreslením rovnaké, React znova použije memoizovaný výsledok, ktory preskočí a rovno komponentu vykresli.
 
 ```jsx
 import React from 'react'
@@ -3955,6 +3955,46 @@ const App = () => {
 	)
 }
 ReactDOM.render(<App />, document.getElementById('root'))
+```
+
+#### useCallback()
+
+useCallback funkcia ma dve vstupne premenne a to anonymnu funkciu a pole s prvkami alebo prazdne pole. Ak je definovany prvok v tomto poly a zmeni sa jeho stav, tak sa prevola ta anonymna funkcia. Dokaze si uchovat vyslednu hodnotu tejto funkcie po zavolani a porovnat s novym stavom.
+
+```jsx
+const memoizedCallback = useCallback(() => {
+	doSomething(a, b)
+}, [a, b])
+```
+
+useCallback funkcia dokaze memoizovat alebo uchovavat hodnotu zo spatneho volania funkcie, ktora sa meni iba ak sa zmenila jedna premenna zo zavislosti
+
+```jsx
+import React, { useState, useRef, useCallback } from 'react'
+
+const useCountRenders = () => {
+	const renders = useRef(0)
+	console.log('Renders: ', renders.current++)
+}
+
+const Hello = React.memo(props => {
+	useCountRenders()
+	return <button onClick={() => props.increment(5)}>Hello</button>
+})
+
+function Example() {
+	const [count, setCount] = useState(0)
+	const increment = useCallback(n => setCount(c => c + n), [setCount])
+
+	return (
+		<div>
+			<Hello increment={increment} />
+			<div>Count: {count}</div>
+		</div>
+	)
+}
+
+export default Example
 ```
 
 ##### useRef()
@@ -4028,7 +4068,7 @@ const sum = (total, num) => {
 console.log(numbers.reduce(sum))
 ```
 
-`reduce` metoda redukuje pole na jedenu hodnotu. Tato metoda vykononá definovanú funkciu pre každý prvok z pola z ľava do prava. Vratena hodnota z definovane funkcie je ulozena do akumulatora total.
+`reduce` metoda redukuje pole na jednu hodnotu. Tato metoda vykononá definovanú funkciu pre každý prvok z pola z ľava do prava. Vratena hodnota z definovane funkcie je ulozena do akumulatora total.
 
 ```js
 pole.reduce(function(začiatočná_hodnota_alebo_predchadzajuca_navaratova_hodnota_z_funkcie, hodnota_aktualneho_prvku, index_aktualneho_prvku, pole), zaciatocna_hodnota)

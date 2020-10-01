@@ -32,16 +32,6 @@ const Animation = () => {
 	const [start, setStart] = useState(false)
 	const [color, setColor] = useState('red')
 
-	useEffect(() => {
-		console.log('useEffect', start)
-		const timer = setTimeout(() => {
-			console.log('rotating stop')
-			setColor('red')
-			setStart(false)
-		}, 3000)
-		return () => clearTimeout(timer)
-	})
-
 	return (
 		<Center>
 			<Spin start={start} color={color} />
